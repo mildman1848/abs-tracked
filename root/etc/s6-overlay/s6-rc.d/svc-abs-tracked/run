@@ -3,7 +3,7 @@
 set -euo pipefail
 
 if [[ -z ${LSIO_NON_ROOT_USER:-} ]]; then
-  exec s6-setuidgid abc /usr/local/bin/abshelflife-sync
+  exec s6-setuidgid abc /usr/local/bin/abs-tracked-sync
 fi
 
-exec /usr/local/bin/abshelflife-sync
+exec /usr/local/bin/abs-tracked-sync

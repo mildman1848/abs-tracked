@@ -9,16 +9,27 @@ ABS_ENABLE_LOCAL_PRECEDENCE="${ABS_ENABLE_LOCAL_PRECEDENCE:-0}"
 ABS_LOCAL_PUSH_THRESHOLD_MS="${ABS_LOCAL_PUSH_THRESHOLD_MS:-30000}"
 
 ABS_ENABLE_CROSS_SERVER_MARK_SYNC="${ABS_ENABLE_CROSS_SERVER_MARK_SYNC:-1}"
+ABS_CROSS_TARGET_REQUIRE_PRINCIPAL_MATCH="${ABS_CROSS_TARGET_REQUIRE_PRINCIPAL_MATCH:-1}"
 ABS_MATCH_PRIORITY="${ABS_MATCH_PRIORITY:-asin,isbn,title_author_duration}"
 ABS_ENABLE_LIBRARY_INDEX="${ABS_ENABLE_LIBRARY_INDEX:-1}"
 ABS_LIBRARY_INDEX_INTERVAL_SECONDS="${ABS_LIBRARY_INDEX_INTERVAL_SECONDS:-21600}"
 ABS_LIBRARY_INDEX_PAGE_SIZE="${ABS_LIBRARY_INDEX_PAGE_SIZE:-200}"
+ABS_API_CONNECT_TIMEOUT_SECONDS="${ABS_API_CONNECT_TIMEOUT_SECONDS:-10}"
+ABS_API_TIMEOUT_SECONDS="${ABS_API_TIMEOUT_SECONDS:-30}"
+ABS_AUTO_IMPORT_CATALOG="${ABS_AUTO_IMPORT_CATALOG:-0}"
+ABS_AUTO_IMPORT_PODCASTS="${ABS_AUTO_IMPORT_PODCASTS:-1}"
+ABS_AUTO_IMPORT_INTERVAL_SECONDS="${ABS_AUTO_IMPORT_INTERVAL_SECONDS:-21600}"
+ABS_CROSS_TARGET_BACKFILL_LIMIT="${ABS_CROSS_TARGET_BACKFILL_LIMIT:-500}"
+
+if [[ "$ABS_CROSS_TARGET_REQUIRE_PRINCIPAL_MATCH" != "1" ]]; then
+    ABS_CROSS_TARGET_REQUIRE_PRINCIPAL_MATCH="0"
+fi
 
 ABS_TARGETS_FILE="${ABS_TARGETS_FILE:-/config/app/targets.json}"
 ABS_SYNC_TRIGGER_FILE="${ABS_SYNC_TRIGGER_FILE:-/config/app/run-now.trigger}"
 
-ABS_DB_NAME="${ABS_DB_NAME:-abshelflife}"
-ABS_DB_USER="${ABS_DB_USER:-abshelflife}"
+ABS_DB_NAME="${ABS_DB_NAME:-abs_tracked}"
+ABS_DB_USER="${ABS_DB_USER:-abs_tracked}"
 ABS_DB_PASSWORD="${ABS_DB_PASSWORD:-}"
 DB_HOST="${ABS_DB_HOST:-127.0.0.1}"
 DB_PORT="${ABS_DB_PORT:-3306}"
@@ -29,14 +40,14 @@ if [[ -n "${ABS_DB_PASSWORD}" ]]; then
 fi
 MYSQL_BIN+=("${ABS_DB_NAME}")
 
-TARGETS_RUNTIME_FILE="/tmp/abshelflife-targets.tsv"
+TARGETS_RUNTIME_FILE="/tmp/abs-tracked-targets.tsv"
 
 log() {
-    echo "[abshelflife] $*"
+    echo "[abs-tracked] $*"
 }
 
 warn() {
-    echo "[abshelflife][warn] $*"
+    echo "[abs-tracked][warn] $*"
 }
 
 sql_escape() {
@@ -55,6 +66,10 @@ db_query() {
 
 now_ms() {
     echo $(( $(date +%s) * 1000 ))
+}
+
+principal_match_required() {
+    [[ "$ABS_CROSS_TARGET_REQUIRE_PRINCIPAL_MATCH" == "1" ]]
 }
 
 sha1_text() {
@@ -246,10 +261,20 @@ api_call() {
     local tmp_body
     tmp_body="$(mktemp)"
 
+    if [[ -z "$base_url" || ! "$base_url" =~ ^https?:// ]]; then
+        warn "api_call skipped: invalid base_url='${base_url}' path='${path}'"
+        : >"$tmp_body"
+        API_STATUS="000"
+        API_BODY_FILE="$tmp_body"
+        return 0
+    fi
+
     local status
     if [[ -n "$data" ]]; then
         status=$(curl -sS -o "$tmp_body" -w "%{http_code}" \
             -X "$method" \
+            --connect-timeout "$ABS_API_CONNECT_TIMEOUT_SECONDS" \
+            --max-time "$ABS_API_TIMEOUT_SECONDS" \
             -H "Authorization: Bearer ${token}" \
             -H "Content-Type: application/json" \
             --data "$data" \
@@ -257,12 +282,113 @@ api_call() {
     else
         status=$(curl -sS -o "$tmp_body" -w "%{http_code}" \
             -X "$method" \
+            --connect-timeout "$ABS_API_CONNECT_TIMEOUT_SECONDS" \
+            --max-time "$ABS_API_TIMEOUT_SECONDS" \
             -H "Authorization: Bearer ${token}" \
             "$url" || true)
     fi
 
     API_STATUS="$status"
     API_BODY_FILE="$tmp_body"
+}
+
+run_auto_catalog_import_if_due() {
+    [[ "$ABS_AUTO_IMPORT_CATALOG" == "1" ]] || return 0
+
+    local outbox_backlog
+    outbox_backlog="$(db_query "SELECT COUNT(*) FROM progress_outbox WHERE status IN ('pending','failed') AND attempts < ${ABS_SYNC_MAX_RETRIES};" 2>/dev/null | tr -d '[:space:]')"
+    outbox_backlog="${outbox_backlog:-0}"
+    [[ "$outbox_backlog" =~ ^[0-9]+$ ]] || outbox_backlog=0
+    if (( outbox_backlog > 0 )); then
+        log "auto catalog import skipped (outbox backlog=${outbox_backlog})"
+        return 0
+    fi
+
+    local now last_ms interval_ms
+    now="$(now_ms)"
+    interval_ms=$((ABS_AUTO_IMPORT_INTERVAL_SECONDS * 1000))
+    last_ms="$(db_query "SELECT COALESCE(setting_value,'0') FROM ui_runtime_settings WHERE setting_key='auto_catalog_import_last_ms' LIMIT 1;" 2>/dev/null | tr -d '[:space:]')"
+    last_ms="${last_ms:-0}"
+    [[ "$last_ms" =~ ^[0-9]+$ ]] || last_ms=0
+
+    if (( last_ms > 0 && now < last_ms + interval_ms )); then
+        return 0
+    fi
+
+    db_exec "
+INSERT INTO ui_runtime_settings (setting_key, setting_value)
+VALUES ('auto_catalog_import_last_ms', '${now}')
+ON DUPLICATE KEY UPDATE setting_value=VALUES(setting_value);
+" || true
+
+    log "auto catalog import start (podcasts=${ABS_AUTO_IMPORT_PODCASTS})"
+    local import_output
+    if ! import_output="$(cd /opt/abs-tracked/ui && PYTHONUNBUFFERED=1 ABS_AUTO_IMPORT_PODCASTS=\"${ABS_AUTO_IMPORT_PODCASTS}\" /opt/venv/bin/python - <<'PY' 2>&1
+import os
+import traceback
+from app import ensure_ui_schema, get_conn, import_abs_catalog
+
+ensure_ui_schema()
+
+def parse_bool(value: str, default: bool = False) -> bool:
+    raw = (value or "").strip().lower()
+    # tolerate quoted env values like '"1"' or "'true'"
+    while len(raw) >= 2 and ((raw[0] == '"' and raw[-1] == '"') or (raw[0] == "'" and raw[-1] == "'")):
+        raw = raw[1:-1].strip().lower()
+    if not raw:
+        return default
+    return raw in {"1", "true", "yes", "on"}
+
+
+podcasts_raw = os.getenv("ABS_AUTO_IMPORT_PODCASTS", "1")
+podcasts = parse_bool(podcasts_raw, default=True)
+
+with get_conn() as conn:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT DISTINCT owner_user_id
+            FROM ui_sync_accounts
+            WHERE enabled = 1
+            ORDER BY owner_user_id
+            """
+        )
+        user_ids = [int(r.get("owner_user_id") or 0) for r in cur.fetchall() if int(r.get("owner_user_id") or 0) > 0]
+
+total = {"books": 0, "podcasts": 0, "podcast_episodes": 0}
+print(f"auto-import users={len(user_ids)} podcasts={podcasts} raw={podcasts_raw!r}", flush=True)
+for uid in user_ids:
+    try:
+        stats = import_abs_catalog(
+            uid,
+            import_books=True,
+            import_podcasts=podcasts,
+            enrich_podcasts=podcasts,
+            prefer_book_metadata=True,
+            progress_log_every=50,
+        )
+        total["books"] += int(stats.get("books", 0))
+        total["podcasts"] += int(stats.get("podcasts", 0))
+        total["podcast_episodes"] += int(stats.get("podcast_episodes", 0))
+        print(f"user={uid} stats={stats}", flush=True)
+    except Exception as exc:
+        print(f"user={uid} error={exc}", flush=True)
+        traceback.print_exc()
+
+print(f"auto-import total={total}", flush=True)
+PY
+)"; then
+        warn "auto catalog import failed"
+        while IFS= read -r line; do
+            [[ -n "$line" ]] && warn "auto-import: $line"
+        done <<<"$import_output"
+        return 1
+    fi
+
+    while IFS= read -r line; do
+        [[ -n "$line" ]] && log "auto-import: $line"
+    done <<<"$import_output"
+    log "auto catalog import end"
 }
 
 canonical_key_from_fields() {
@@ -323,6 +449,7 @@ upsert_item_identity() {
     local duration="${10}"
 
     local e_target e_item e_ck e_asin e_isbn e_title e_author e_series
+    local published_year_sql duration_sql
     e_target="$(sql_escape "$target_id")"
     e_item="$(sql_escape "$library_item_id")"
     e_ck="$(sql_escape "$canonical_key")"
@@ -331,12 +458,22 @@ upsert_item_identity() {
     e_title="$(sql_escape "$title")"
     e_author="$(sql_escape "$author")"
     e_series="$(sql_escape "$series_name")"
+    published_year_sql="NULL"
+    if [[ "$published_year" =~ ^[0-9]+$ ]] && (( published_year > 0 )); then
+        published_year_sql="$published_year"
+    fi
+    duration_sql="NULL"
+    if [[ "$duration" =~ ^[0-9]+([.][0-9]+)?$ ]]; then
+        if awk "BEGIN { exit !($duration > 0) }"; then
+            duration_sql="$duration"
+        fi
+    fi
 
     db_exec "
 INSERT INTO item_identity (
   target_id, library_item_id, canonical_key, asin, isbn, title, author, series_name, published_year, duration_sec
 ) VALUES (
-  '${e_target}', '${e_item}', NULLIF('${e_ck}',''), NULLIF('${e_asin}',''), NULLIF('${e_isbn}',''), NULLIF('${e_title}',''), NULLIF('${e_author}',''), NULLIF('${e_series}',''), ${published_year}, ${duration}
+  '${e_target}', '${e_item}', NULLIF('${e_ck}',''), NULLIF('${e_asin}',''), NULLIF('${e_isbn}',''), NULLIF('${e_title}',''), NULLIF('${e_author}',''), NULLIF('${e_series}',''), ${published_year_sql}, ${duration_sql}
 )
 ON DUPLICATE KEY UPDATE
   canonical_key = VALUES(canonical_key),
@@ -482,7 +619,7 @@ index_target_items() {
               (.media.metadata.seriesName // (.media.metadata.series // [] | first | .name) // ""),
               ((.media.metadata.publishedYear // .media.metadata.publishYear // 0) | tonumber),
               ((.media.duration // 0) | tonumber)
-            ] | @tsv' "$API_BODY_FILE")"
+            ] | map(tostring) | join("\u001f")' "$API_BODY_FILE")"
 
             local count
             count="$(jq -r '.results | length' "$API_BODY_FILE")"
@@ -492,7 +629,7 @@ index_target_items() {
                 break
             fi
 
-            while IFS=$'\t' read -r item_id asin isbn title author series_name published_year duration; do
+            while IFS=$'\x1f' read -r item_id asin isbn title author series_name published_year duration; do
                 [[ -z "$item_id" ]] && continue
                 local ck
                 ck="$(canonical_key_from_fields "$asin" "$isbn" "$title" "$author" "$duration")"
@@ -626,6 +763,101 @@ INSERT INTO progress_outbox (
 "
 }
 
+backfill_progress_across_targets() {
+    [[ "$ABS_ENABLE_CROSS_SERVER_MARK_SYNC" != "1" ]] && return 0
+
+    local rows
+    rows="$(db_query "
+SELECT
+  src.target_id,
+  src.principal_id,
+  src.user_id,
+  src.library_item_id,
+  COALESCE(src.canonical_key,''),
+  COALESCE(src.progress,0),
+  COALESCE(src.current_time_sec,0),
+  COALESCE(src.duration,0),
+  COALESCE(src.is_finished,0),
+  COALESCE(src.last_update_ms, UNIX_TIMESTAMP(NOW(3))*1000),
+  dest.target_id,
+  ts.server_id,
+  dest.library_item_id,
+  COALESCE(dest_state.progress,0),
+  COALESCE(dest_state.current_time_sec,0),
+  COALESCE(dest_state.duration,0),
+  COALESCE(dest_state.is_finished,0),
+  COALESCE(dest_state.last_update_ms,0)
+FROM progress_latest src
+JOIN item_identity src_item
+  ON src_item.target_id = src.target_id
+ AND src_item.library_item_id = src.library_item_id
+JOIN item_identity dest
+  ON (
+    (
+      src.canonical_key IS NOT NULL AND src.canonical_key <> ''
+      AND dest.canonical_key = src.canonical_key
+      AND LOWER(TRIM(COALESCE(dest.title,''))) = LOWER(TRIM(COALESCE(src_item.title,'')))
+    )
+    OR (
+      src_item.asin IS NOT NULL AND src_item.asin <> ''
+      AND UPPER(REPLACE(REPLACE(COALESCE(dest.asin,''), '-', ''), ' ', '')) = UPPER(REPLACE(REPLACE(src_item.asin, '-', ''), ' ', ''))
+      AND LOWER(TRIM(COALESCE(dest.title,''))) = LOWER(TRIM(COALESCE(src_item.title,'')))
+    )
+    OR (
+      src_item.isbn IS NOT NULL AND src_item.isbn <> ''
+      AND UPPER(REPLACE(REPLACE(COALESCE(dest.isbn,''), '-', ''), ' ', '')) = UPPER(REPLACE(REPLACE(src_item.isbn, '-', ''), ' ', ''))
+      AND LOWER(TRIM(COALESCE(dest.title,''))) = LOWER(TRIM(COALESCE(src_item.title,'')))
+    )
+  )
+JOIN target_state ts
+  ON ts.target_id = dest.target_id
+LEFT JOIN progress_latest dest_state
+  ON dest_state.target_id = dest.target_id
+ AND dest_state.user_id = src.user_id
+ AND dest_state.library_item_id = dest.library_item_id
+ AND dest_state.episode_id = ''
+WHERE src.episode_id = ''
+  AND src.target_id <> dest.target_id
+  AND (
+    ${ABS_CROSS_TARGET_REQUIRE_PRINCIPAL_MATCH} != 1
+    OR ts.principal_id = src.principal_id
+  )
+  AND (
+    COALESCE(dest_state.last_update_ms,0) < COALESCE(src.last_update_ms,0)
+    OR COALESCE(dest_state.progress,0) + 0.000001 < COALESCE(src.progress,0)
+    OR COALESCE(dest_state.is_finished,0) < COALESCE(src.is_finished,0)
+  )
+ORDER BY src.last_update_ms DESC
+LIMIT ${ABS_CROSS_TARGET_BACKFILL_LIMIT};
+")"
+
+    [[ -z "$rows" ]] && return 0
+
+    local queued=0
+    while IFS=$'\t' read -r source_target principal_id user_id source_item canonical_key src_progress src_current src_duration src_finished src_last_update dest_target dest_server dest_item dest_progress dest_current dest_duration dest_finished dest_last_update; do
+        [[ -z "$dest_target" || -z "$dest_item" || -z "$user_id" ]] && continue
+        src_last_update="${src_last_update%%.*}"
+        [[ -z "$src_last_update" ]] && src_last_update=0
+
+        local effective_duration effective_current
+        effective_duration="$src_duration"
+        if [[ "${effective_duration%%.*}" == "0" || -z "$effective_duration" ]]; then
+            effective_duration="$dest_duration"
+        fi
+        effective_current="$src_current"
+        if [[ "${effective_current%%.*}" == "0" && "${effective_duration%%.*}" != "0" ]]; then
+            effective_current="$(awk -v p="${src_progress}" -v d="${effective_duration}" 'BEGIN { printf "%.3f", (p*d) }')"
+        fi
+
+        queue_outbox_if_needed "$dest_target" "$dest_server" "$principal_id" "$user_id" "$dest_item" "" "$canonical_key" "$src_progress" "$effective_current" "$effective_duration" "$src_finished" "$src_last_update"
+        queued=$((queued + 1))
+    done <<< "$rows"
+
+    if (( queued > 0 )); then
+        log "backfill queued ${queued} cross-target progress updates"
+    fi
+}
+
 backfill_finished_across_targets() {
     [[ "$ABS_ENABLE_CROSS_SERVER_MARK_SYNC" != "1" ]] && return 0
 
@@ -654,14 +886,20 @@ LEFT JOIN item_identity src_item
  AND src_item.library_item_id = src.library_item_id
 JOIN item_identity dest
   ON (
-    (src.canonical_key IS NOT NULL AND src.canonical_key <> '' AND dest.canonical_key = src.canonical_key)
+    (
+      src.canonical_key IS NOT NULL AND src.canonical_key <> ''
+      AND dest.canonical_key = src.canonical_key
+      AND LOWER(TRIM(COALESCE(dest.title,''))) = LOWER(TRIM(COALESCE(src_item.title,'')))
+    )
     OR (
       src_item.asin IS NOT NULL AND src_item.asin <> ''
       AND UPPER(REPLACE(REPLACE(COALESCE(dest.asin,''), '-', ''), ' ', '')) = UPPER(REPLACE(REPLACE(src_item.asin, '-', ''), ' ', ''))
+      AND LOWER(TRIM(COALESCE(dest.title,''))) = LOWER(TRIM(COALESCE(src_item.title,'')))
     )
     OR (
       src_item.isbn IS NOT NULL AND src_item.isbn <> ''
       AND UPPER(REPLACE(REPLACE(COALESCE(dest.isbn,''), '-', ''), ' ', '')) = UPPER(REPLACE(REPLACE(src_item.isbn, '-', ''), ' ', ''))
+      AND LOWER(TRIM(COALESCE(dest.title,''))) = LOWER(TRIM(COALESCE(src_item.title,'')))
     )
   )
 JOIN target_state ts
@@ -679,10 +917,13 @@ WHERE src.is_finished = 1
     OR (src_item.isbn IS NOT NULL AND src_item.isbn <> '')
   )
   AND src.target_id <> dest.target_id
-  AND ts.principal_id = src.principal_id
+  AND (
+    ${ABS_CROSS_TARGET_REQUIRE_PRINCIPAL_MATCH} != 1
+    OR ts.principal_id = src.principal_id
+  )
   AND (dest_state.is_finished IS NULL OR dest_state.is_finished = 0 OR dest_state.last_update_ms < src.last_update_ms)
 ORDER BY src.last_update_ms DESC
-LIMIT 500;
+LIMIT ${ABS_CROSS_TARGET_BACKFILL_LIMIT};
 ")"
 
     [[ -z "$rows" ]] && return 0
@@ -720,7 +961,9 @@ propagate_finished_to_other_targets() {
     while IFS=$'\t' read -r target_id server_id target_principal base_url token; do
         [[ -z "$target_id" ]] && continue
         [[ "$target_id" == "$source_target_id" ]] && continue
-        [[ "$target_principal" != "$principal_id" ]] && continue
+        if principal_match_required && [[ "$target_principal" != "$principal_id" ]]; then
+            continue
+        fi
 
     local e_target e_ck
     e_target="$(sql_escape "$target_id")"
@@ -745,14 +988,19 @@ LEFT JOIN item_identity src
  )
 WHERE dest.target_id='${e_target}'
   AND (
-    dest.canonical_key='${e_ck}'
+    (
+      dest.canonical_key='${e_ck}'
+      AND LOWER(TRIM(COALESCE(dest.title,''))) = LOWER(TRIM(COALESCE(src.title,'')))
+    )
     OR (
       src.asin IS NOT NULL AND src.asin<>''
       AND UPPER(REPLACE(REPLACE(COALESCE(dest.asin,''), '-', ''), ' ', '')) = UPPER(REPLACE(REPLACE(src.asin, '-', ''), ' ', ''))
+      AND LOWER(TRIM(COALESCE(dest.title,''))) = LOWER(TRIM(COALESCE(src.title,'')))
     )
     OR (
       src.isbn IS NOT NULL AND src.isbn<>''
       AND UPPER(REPLACE(REPLACE(COALESCE(dest.isbn,''), '-', ''), ' ', '')) = UPPER(REPLACE(REPLACE(src.isbn, '-', ''), ' ', ''))
+      AND LOWER(TRIM(COALESCE(dest.title,''))) = LOWER(TRIM(COALESCE(src.title,'')))
     )
   )
 LIMIT 1;
@@ -874,11 +1122,11 @@ pull_remote_progress_for_target() {
 
 push_outbox() {
     local outbox_rows
-    outbox_rows="$(db_query "SELECT id,target_id,server_id,principal_id,user_id,library_item_id,COALESCE(NULLIF(episode_id,''),'__EMPTY__') AS episode_id_norm,COALESCE(NULLIF(canonical_key,''),'__EMPTY__') AS canonical_key_norm,COALESCE(progress,0),COALESCE(current_time_sec,0),COALESCE(duration,0),COALESCE(is_finished,0),COALESCE(last_update_ms,UNIX_TIMESTAMP(NOW(3))*1000) FROM progress_outbox WHERE status IN ('pending','failed') AND attempts < ${ABS_SYNC_MAX_RETRIES} ORDER BY id ASC LIMIT ${ABS_SYNC_PUSH_BATCH_SIZE};")"
+    outbox_rows="$(db_query "SELECT id,target_id,server_id,principal_id,user_id,library_item_id,COALESCE(NULLIF(episode_id,''),'__EMPTY__') AS episode_id_norm,COALESCE(NULLIF(canonical_key,''),'__EMPTY__') AS canonical_key_norm,COALESCE(progress,0),COALESCE(current_time_sec,0),COALESCE(duration,0),COALESCE(is_finished,0),COALESCE(last_update_ms,UNIX_TIMESTAMP(NOW(3))*1000),status FROM progress_outbox WHERE status IN ('pending','failed') AND attempts < ${ABS_SYNC_MAX_RETRIES} ORDER BY (status='pending') DESC, id ASC LIMIT ${ABS_SYNC_PUSH_BATCH_SIZE};")"
 
     [[ -z "$outbox_rows" ]] && return 0
 
-    while IFS=$'\t' read -r id target_id server_id principal_id user_id library_item_id episode_id canonical_key progress current_time duration is_finished last_update_ms; do
+    while IFS=$'\t' read -r id target_id server_id principal_id user_id library_item_id episode_id canonical_key progress current_time duration is_finished last_update_ms row_status; do
         [[ -z "$id" ]] && continue
         [[ "$episode_id" == "__EMPTY__" ]] && episode_id=""
         [[ "$canonical_key" == "__EMPTY__" ]] && canonical_key=""
@@ -912,15 +1160,19 @@ push_outbox() {
 
         api_call "PATCH" "$base_url" "$token" "$endpoint" "$payload"
 
-        if [[ "$API_STATUS" == "200" ]]; then
+        if [[ "$API_STATUS" =~ ^2[0-9][0-9]$ ]]; then
             db_exec "UPDATE progress_outbox SET status='applied', attempts=attempts+1, last_error=NULL WHERE id=${id};"
             upsert_latest_and_history "$target_id" "$server_id" "$principal_id" "$user_id" "$library_item_id" "$episode_id" "local-push-${id}" "$canonical_key" "$progress" "$current_time" "$duration" "$is_finished" "$last_update_ms" "NULL" "$last_update_ms" "local_push"
             log "push applied: target=${target_id} item=${library_item_id}${episode_id:+/${episode_id}} outbox=${id}"
         else
             local error_text
             error_text="$(head -c 1000 "$API_BODY_FILE" | tr '\n' ' ' | sed "s/'/''/g")"
-            db_exec "UPDATE progress_outbox SET status='failed', attempts=attempts+1, last_error='HTTP ${API_STATUS}: ${error_text}' WHERE id=${id};"
-            warn "push failed (outbox=${id}, status=${API_STATUS})"
+            if [[ "$API_STATUS" == "404" ]]; then
+                db_exec "UPDATE progress_outbox SET status='failed', attempts=${ABS_SYNC_MAX_RETRIES}, last_error='HTTP 404 (permanent): ${error_text}' WHERE id=${id};"
+            else
+                db_exec "UPDATE progress_outbox SET status='failed', attempts=attempts+1, last_error='HTTP ${API_STATUS}: ${error_text}' WHERE id=${id};"
+            fi
+            warn "push failed (outbox=${id}, status=${API_STATUS}, endpoint=${endpoint}, target=${target_id}, item=${library_item_id}${episode_id:+/${episode_id}})"
         fi
 
         rm -f "$API_BODY_FILE"
@@ -937,16 +1189,20 @@ run_sync_cycle() {
 
     while IFS=$'\t' read -r target_id server_id principal_id base_url token; do
         [[ -z "$target_id" ]] && continue
+        log "target=${target_id} cycle start"
         if [[ -z "$server_id" || -z "$principal_id" || -z "$base_url" || -z "$token" ]]; then
             warn "skip invalid runtime target (id=${target_id}) missing server/principal/url/token"
             continue
         fi
         pull_remote_progress_for_target "$target_id" "$server_id" "$principal_id" "$base_url" "$token" || warn "target=${target_id} pull failed for this cycle"
         index_target_items "$target_id" "$server_id" "$base_url" "$token" || warn "target=${target_id} index run failed"
+        log "target=${target_id} cycle end"
     done < "$TARGETS_RUNTIME_FILE"
 
+    backfill_progress_across_targets || warn "cross-target progress backfill failed"
     backfill_finished_across_targets || warn "cross-target finished backfill failed"
     push_outbox || warn "push processing failed"
+    run_auto_catalog_import_if_due || warn "auto catalog import failed"
 }
 
 wait_for_next_cycle() {

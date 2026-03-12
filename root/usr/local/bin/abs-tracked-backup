@@ -4,13 +4,13 @@ set -euo pipefail
 
 BACKUP_DIR="${BACKUP_DIR:-/config/backups}"
 BACKUP_RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-14}"
-ABS_DB_NAME="${ABS_DB_NAME:-abshelflife}"
+ABS_DB_NAME="${ABS_DB_NAME:-abs_tracked}"
 
-DB_USER="${ABS_BACKUP_DB_USER:-${ABS_DB_USER:-abshelflife}}"
+DB_USER="${ABS_BACKUP_DB_USER:-${ABS_DB_USER:-abs_tracked}}"
 DB_PASS="${ABS_BACKUP_DB_PASSWORD:-${ABS_DB_PASSWORD:-}}"
 
 mkdir -p "${BACKUP_DIR}"
-backup_file="${BACKUP_DIR}/abshelflife_${ABS_DB_NAME}_$(date -u +'%Y%m%dT%H%M%SZ').sql.gz"
+backup_file="${BACKUP_DIR}/abs-tracked_${ABS_DB_NAME}_$(date -u +'%Y%m%dT%H%M%SZ').sql.gz"
 tmp_file="${backup_file}.tmp"
 
 echo "[backup] writing ${backup_file}"

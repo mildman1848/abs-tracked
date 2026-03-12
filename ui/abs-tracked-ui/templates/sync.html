@@ -15,7 +15,11 @@
     <div><label>&nbsp;</label><button class="btn" type="submit" formaction="{{ url_for('sync_import_collected') }}" formmethod="post">{{ t('action.import_collected') }}</button></div>
     <div><label>&nbsp;</label><button class="btn secondary" type="submit" formaction="{{ url_for('sync_import_podcasts') }}" formmethod="post">{{ t('action.import_podcasts') }}</button></div>
     <div><label>&nbsp;</label><button class="btn" type="submit" formaction="{{ url_for('sync_rebuild_progress') }}" formmethod="post">{{ t('action.rebuild_progress') }}</button></div>
-    <div><label>&nbsp;</label><button class="btn danger" type="submit" formaction="{{ url_for('sync_cleanup_collected') }}" formmethod="post" onclick="return confirm('Clean collected library now?');">{{ t('action.cleanup_collected') }}</button></div>
+    <div>
+      <label>&nbsp;</label>
+      <button class="btn" type="submit" formaction="{{ url_for('sync_book_metadata') }}" formmethod="post">{{ t('action.sync_book_metadata') }}</button>
+      <input type="hidden" name="mode" value="missing_cover">
+    </div>
     <div><label>&nbsp;</label><a class="btn secondary" href="{{ url_for('matching_view') }}">{{ t('action.open_matching') }}</a></div>
     <div><label>&nbsp;</label><a class="btn secondary" href="{{ url_for('history_view') }}">{{ t('nav.history') }}</a></div>
   </form>
@@ -84,5 +88,22 @@
       {% endfor %}
     </tbody>
   </table>
+</div>
+
+<div class="card">
+  <h3>⚠️ {{ t('sync.reset.title') }}</h3>
+  <p class="muted">{{ t('sync.reset.subtitle') }}</p>
+  <form method="post" action="{{ url_for('sync_reset_library') }}">
+    <input type="hidden" name="step" value="1">
+    <button class="btn danger" type="submit" onclick="return confirm('First confirmation: start full library reset?');">{{ t('sync.reset.first_confirm') }}</button>
+  </form>
+  {% if reset_pending %}
+  <form method="post" action="{{ url_for('sync_reset_library') }}" style="margin-top:10px;">
+    <input type="hidden" name="step" value="2">
+    <label>{{ t('sync.reset.type_reset') }}</label>
+    <input name="confirm_text" placeholder="{{ t('sync.reset.placeholder') }}" required>
+    <button class="btn danger" type="submit" onclick="return confirm('Second confirmation: execute irreversible full reset now?');">{{ t('sync.reset.second_confirm') }}</button>
+  </form>
+  {% endif %}
 </div>
 {% endblock %}

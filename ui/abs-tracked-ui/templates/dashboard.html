@@ -170,7 +170,6 @@
         <p><strong>{{ t('field.series') }}:</strong> {{ b.series_name or t('common.none') }}</p>
         <p><strong>{{ t('field.year') }}:</strong> {{ b.published_year if b.published_year else t('common.none') }}</p>
         <p><strong>{{ t('field.asin') }}:</strong> {{ b.asin or t('common.none') }}</p>
-        <p><strong>{{ t('field.collection_status') }}:</strong> {{ t('collection.' + (b.collection_status or 'collected')) }}</p>
         <p><strong>{{ t('field.listening_status') }}:</strong> {{ t('status.' + (b.listening_status or 'not_started')) }}</p>
         <div class="actions">
           <form method="post" action="{{ url_for('mark_synced_heard') }}">

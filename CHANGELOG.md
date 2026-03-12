@@ -21,21 +21,21 @@ All notable changes to this project are documented in this file.
 - Manual "Rebuild Progress from ABS" action in Sync settings.
 - Manual "Clean Collected Library" action in Sync settings.
 - Dedicated Hadolint configuration (`.hadolint.yaml`) and workflow (`.github/workflows/hadolint.yml`) for all Dockerfiles.
-- Repository-wide single-container-only deployment mode (`abshelflife`) in compose, env, Makefile, and workflows.
+- Repository-wide single-container-only deployment mode (`abs-tracked`) in compose, env, Makefile, and workflows.
 - GitHub community standards inspired by LSIO `docker-freshrss`: issue templates, PR template, and contributing guide.
 - `greetings.yml` workflow for first-time issue/PR messages.
 - Automated `SECURITY.md` synchronization workflow (`.github/workflows/security-policy-sync.yml`) based on `VERSION`.
 
 ### Changed
 - Dark mode contrast refresh for navigation, cards, stats widgets and forms.
-- Header brand title simplified to `ABShelfLife` (without tracker suffix).
+- Header brand title simplified to `abs-tracked` (without tracker suffix).
 - Navigation reduced to `Home`, `Audiobooks`, `Podcasts`, `Settings` (history removed from top menu).
 - Deployment defaults now rely on UI-managed ABS accounts and `targets.json`.
-- Docker release workflow now publishes only the single image `abshelflife`.
+- Docker release workflow now publishes only the single image `abs-tracked`.
 - Docker release workflow now supports both manual dispatch and tag-push triggers (`v*`).
 - CI/Security/Hadolint pipelines validate single-container Dockerfiles only.
-- Make defaults use `abshelflife` and single-container compose flows only.
-- Legacy multi-container compose services (`abshelflife-db`, `abshelflife-ui`) and legacy Dockerfiles were removed from active maintenance paths.
+- Make defaults use `abs-tracked` and single-container compose flows only.
+- Legacy multi-container compose services (`abs-tracked-db`, `abs-tracked-ui`) and legacy Dockerfiles were removed from active maintenance paths.
 - Weblate/Crowdin integration files and references were removed from the repository.
 - `permissions.yml` now performs executable permission checks for init/service scripts via LSIO reusable workflow.
 - Sync Security Policy workflow YAML was fixed so scheduled/push runs execute correctly.
@@ -49,7 +49,7 @@ All notable changes to this project are documented in this file.
 ### Added
 - LinuxServer-style repository structure (`Dockerfile`, `Dockerfile.aarch64`, `root/` at top-level).
 - Split documentation files (`README.md`, `README.DE.md`, `CHANGELOG.md`, `CHANGELOG.DE.md`).
-- Optional ABShelfLife UI service (`ui/abshelflife-ui`) for browsing latest/history sync data.
+- Optional abs-tracked UI service (`ui/abs-tracked-ui`) for browsing latest/history sync data.
 - Multi-target sync foundation for multiple ABS servers/users in one container.
 - Composite identity model in DB: `target_id + user_id + library_item_id + episode_id`.
 - Canonical key matching bridge (`ASIN` -> `ISBN` -> `title+author+duration`).

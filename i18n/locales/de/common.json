@@ -1,5 +1,5 @@
 {
-  "app.name": "ABShelfLife",
+  "app.name": "abs-tracked",
   "app.tagline": "Historisches Tracking fuer Audiobookshelf",
   "sync.mode.two_way": "Zwei-Wege-Synchronisierung",
   "backup.local_mount": "Lokales Mount-Backup aktiviert"

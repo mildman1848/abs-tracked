@@ -4,8 +4,8 @@ set -euo pipefail
 
 export DB_HOST="${DB_HOST:-127.0.0.1}"
 export DB_PORT="${DB_PORT:-3306}"
-export DB_NAME="${DB_NAME:-${ABS_DB_NAME:-abshelflife}}"
-export DB_USER="${DB_USER:-${ABS_DB_USER:-abshelflife}}"
+export DB_NAME="${DB_NAME:-${ABS_DB_NAME:-abs_tracked}}"
+export DB_USER="${DB_USER:-${ABS_DB_USER:-abs_tracked}}"
 export TARGETS_FILE="${TARGETS_FILE:-${ABS_TARGETS_FILE:-/config/app/targets.json}}"
 export MANUAL_SYNC_TRIGGER_FILE="${MANUAL_SYNC_TRIGGER_FILE:-${ABS_SYNC_TRIGGER_FILE:-/config/app/run-now.trigger}}"
 export ABS_SYNC_INTERVAL_SECONDS_DEFAULT="${ABS_SYNC_INTERVAL_SECONDS_DEFAULT:-${ABS_SYNC_INTERVAL_SECONDS:-300}}"
@@ -15,7 +15,7 @@ if [[ -z "${DB_PASSWORD:-}" && -n "${ABS_DB_PASSWORD:-}" ]]; then
   export DB_PASSWORD="${ABS_DB_PASSWORD}"
 fi
 
-cd /opt/abshelflife/ui
+cd /opt/abs-tracked/ui
 
 if [[ -z ${LSIO_NON_ROOT_USER:-} ]]; then
   exec s6-setuidgid abc /opt/venv/bin/python app.py

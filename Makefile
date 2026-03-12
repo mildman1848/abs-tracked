@@ -3,11 +3,11 @@
         setup env-setup env-validate \
         secrets-generate secrets-generate-ci secrets-rotate secrets-clean secrets-info
 
-IMAGE_NAME ?= $(or $(DOCKERHUB_SINGLE_REPOSITORY),$(USER)/abshelflife)
+IMAGE_NAME ?= $(or $(DOCKERHUB_SINGLE_REPOSITORY),$(USER)/abs-tracked)
 VERSION := $(shell cat VERSION)
 BUILD_DATE := $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 COMPOSE_FILE ?= docker-compose.dev.yml
-SERVICE ?= abshelflife
+SERVICE ?= abs-tracked
 
 GREEN := \033[0;32m
 YELLOW := \033[0;33m
@@ -17,7 +17,7 @@ NC := \033[0m
 
 ## help: Display this help message
 help:
-	@echo "$(BLUE)ABShelfLife Single-Container Build System$(NC)"
+	@echo "$(BLUE)abs-tracked Single-Container Build System$(NC)"
 	@echo ""
 	@echo "$(GREEN)Available targets:$(NC)"
 	@sed -n 's/^##//p' ${MAKEFILE_LIST} | column -t -s ':' | sed -e 's/^/ /'
@@ -60,23 +60,23 @@ build-multiarch:
 ## test: Run quick container smoke test
 test:
 	@echo "$(GREEN)Running smoke test...$(NC)"
-	@docker rm -f abshelflife-test >/dev/null 2>&1 || true
-	@docker run -d --name abshelflife-test \
+	@docker rm -f abs-tracked-test >/dev/null 2>&1 || true
+	@docker run -d --name abs-tracked-test \
 		-e MYSQL_ROOT_PASSWORD=testroot \
-		-e ABS_DB_NAME=abshelflife \
-		-e ABS_DB_USER=abshelflife \
+		-e ABS_DB_NAME=abs_tracked \
+		-e ABS_DB_USER=abs_tracked \
 		-e ABS_DB_PASSWORD=testdb \
 		$(IMAGE_NAME):latest
 	@sleep 20
-	@docker logs --tail 100 abshelflife-test
-	@docker rm -f abshelflife-test >/dev/null 2>&1 || true
+	@docker logs --tail 100 abs-tracked-test
+	@docker rm -f abs-tracked-test >/dev/null 2>&1 || true
 
 ## validate: Validate Dockerfiles and shell syntax
 validate: lint-docker
 	@echo "$(GREEN)Check shell scripts$(NC)"
-	@find root -type f \( -name "*.sh" -o -name "run" -o -name "finish" -o -name "abshelflife-*" \) -print0 | xargs -0 -I{} bash -n "{}"
+	@find root -type f \( -name "*.sh" -o -name "run" -o -name "finish" -o -name "abs-tracked-*" \) -print0 | xargs -0 -I{} bash -n "{}"
 	@echo "$(GREEN)Check UI python syntax$(NC)"
-	@python3 -m py_compile ui/abshelflife-ui/app.py
+	@python3 -m py_compile ui/abs-tracked-ui/app.py
 
 ## lint-docker: Run hadolint across single-container Dockerfiles
 lint-docker:

@@ -13,6 +13,6 @@ Only the current release line receives security updates.
 
 Please use GitHub Security Advisories for private vulnerability disclosure:
 
-- https://github.com/mildman1848/ABShelfLife/security/advisories/new
+- https://github.com/mildman1848/abs-tracked/security/advisories/new
 
 If GitHub advisories are unavailable, open a private maintainer contact path and avoid public issue disclosure until triage is complete.

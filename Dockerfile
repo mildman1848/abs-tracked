@@ -4,8 +4,8 @@ FROM ghcr.io/linuxserver/baseimage-alpine:3.23
 
 ARG BUILD_DATE
 ARG VERSION
-LABEL build_version="ABShelfLife single-container version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="abshelflife"
+LABEL build_version="abs-tracked single-container version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+LABEL maintainer="abs-tracked"
 
 ENV MYSQL_DIR="/config" \
     DATADIR="/config/databases" \
@@ -28,19 +28,19 @@ RUN \
     netcat-openbsd \
     python3 \
     py3-pip && \
-  printf "ABShelfLife version: %s\nBuild-date: %s\n" "${VERSION}" "${BUILD_DATE}" > /build_version && \
+  printf "abs-tracked version: %s\nBuild-date: %s\n" "${VERSION}" "${BUILD_DATE}" > /build_version && \
   echo "**** cleanup ****" && \
   rm -rf \
     /tmp/* \
     "$HOME/.cache"
 
-COPY ui/abshelflife-ui/requirements.txt /opt/abshelflife/ui/requirements.txt
+COPY ui/abs-tracked-ui/requirements.txt /opt/abs-tracked/ui/requirements.txt
 RUN python3 -m venv /opt/venv && \
-    /opt/venv/bin/pip install --no-cache-dir -r /opt/abshelflife/ui/requirements.txt
+    /opt/venv/bin/pip install --no-cache-dir -r /opt/abs-tracked/ui/requirements.txt
 
-COPY ui/abshelflife-ui/app.py /opt/abshelflife/ui/app.py
-COPY ui/abshelflife-ui/templates /opt/abshelflife/ui/templates
-COPY ui/abshelflife-ui/static /opt/abshelflife/ui/static
+COPY ui/abs-tracked-ui/app.py /opt/abs-tracked/ui/app.py
+COPY ui/abs-tracked-ui/templates /opt/abs-tracked/ui/templates
+COPY ui/abs-tracked-ui/static /opt/abs-tracked/ui/static
 
 COPY root/ /
 

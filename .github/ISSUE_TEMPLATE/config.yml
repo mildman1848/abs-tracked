@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Documentation
-    url: https://github.com/mildman1848/ABShelfLife/blob/main/README.md
-    about: Read the ABShelfLife setup and usage documentation first.
+    url: https://github.com/mildman1848/abs-tracked/blob/main/README.md
+    about: Read the abs-tracked setup and usage documentation first.

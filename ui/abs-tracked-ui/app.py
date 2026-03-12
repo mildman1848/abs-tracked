@@ -70,6 +70,9 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "field.listening_status": "Listening",
         "field.progress": "Progress",
         "field.status": "Status",
+        "field.until_episode_no": "Up to Episode No.",
+        "field.from_episode_no": "From Episode No.",
+        "field.to_episode_no": "To Episode No.",
         "field.abs_presence": "ABS",
         "collection.collected": "Collected",
         "collection.missing": "Missing",
@@ -88,12 +91,15 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "action.import_collected": "Import Collected Audiobooks",
         "action.import_podcasts": "Import Podcasts (ABS + iTunes)",
         "action.rebuild_progress": "Rebuild Progress from ABS",
-        "action.cleanup_collected": "Clean Collected Library",
+        "action.sync_book_metadata": "Sync Book Metadata (Providers)",
+        "action.reset_library": "Reset Library",
         "action.edit": "Edit",
         "action.delete": "Delete",
         "action.cancel_edit": "Cancel Edit",
         "action.show_unheard": "Only Unheard",
         "action.show_all_episodes": "Show All",
+        "action.mark_prev_heard": "Mark Previous Episodes as Heard",
+        "action.mark_range_unheard": "Mark Episode Range as Unheard",
         "action.open_abs": "Open in ABS",
         "action.open_matching": "Open Matching",
         "action.match_now": "Match Now",
@@ -118,6 +124,12 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "sync.table_enabled": "Enabled",
         "sync.table_updated": "Updated",
         "sync.table_actions": "Actions",
+        "sync.reset.title": "Danger Zone",
+        "sync.reset.subtitle": "Delete all imported audiobooks, podcasts, episodes and sync/progress history for this account.",
+        "sync.reset.first_confirm": "Confirm Reset (Step 1)",
+        "sync.reset.second_confirm": "Confirm Reset (Step 2)",
+        "sync.reset.type_reset": "Type RESET to continue",
+        "sync.reset.placeholder": "RESET",
         "history.title": "History",
         "podcast.next_episode": "Next Episode",
         "podcast.all_done": "All episodes completed",
@@ -134,6 +146,12 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "message.no_collected": "No collected audiobooks yet. Use Sync Setup -> Import Collected Audiobooks.",
         "message.no_podcasts": "No podcasts imported yet. Use Sync Setup -> Import Podcasts (ABS + iTunes).",
         "message.no_podcast_episodes": "No podcast episodes imported yet.",
+        "message.mark_prev_heard_invalid": "Please provide a valid episode number greater than 0.",
+        "message.mark_prev_heard_none": "No numbered episodes found up to the selected number.",
+        "message.mark_prev_heard_done": "Queued %(count)s podcast episodes as heard (up to episode %(episode)s).",
+        "message.mark_range_unheard_invalid": "Please provide a valid episode range (from <= to, both > 0).",
+        "message.mark_range_unheard_none": "No numbered episodes found in the selected range.",
+        "message.mark_range_unheard_done": "Queued %(count)s podcast episodes as unheard (episode %(from)s to %(to)s).",
         "common.none": "-",
         "common.yes": "Yes",
         "common.no": "No",
@@ -186,6 +204,9 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "field.listening_status": "Hörstatus",
         "field.progress": "Fortschritt",
         "field.status": "Status",
+        "field.until_episode_no": "Bis Folgennummer",
+        "field.from_episode_no": "Von Folgennummer",
+        "field.to_episode_no": "Bis Folgennummer",
         "field.abs_presence": "ABS",
         "collection.collected": "Gesammelt",
         "collection.missing": "Fehlend",
@@ -204,12 +225,15 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "action.import_collected": "Gesammelte Hörbücher importieren",
         "action.import_podcasts": "Podcasts importieren (ABS + iTunes)",
         "action.rebuild_progress": "Fortschritt aus ABS neu einlesen",
-        "action.cleanup_collected": "Gesammelte Bibliothek bereinigen",
+        "action.sync_book_metadata": "Buch-Metadaten synchronisieren (Provider)",
+        "action.reset_library": "Bibliothek zurücksetzen",
         "action.edit": "Bearbeiten",
         "action.delete": "Löschen",
         "action.cancel_edit": "Bearbeitung abbrechen",
         "action.show_unheard": "Nur ungehörte",
         "action.show_all_episodes": "Alle anzeigen",
+        "action.mark_prev_heard": "Vorherige Folgen als gehört markieren",
+        "action.mark_range_unheard": "Folgenbereich als ungehört markieren",
         "action.open_abs": "In ABS öffnen",
         "action.open_matching": "Matching öffnen",
         "action.match_now": "Jetzt matchen",
@@ -234,6 +258,12 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "sync.table_enabled": "Aktiv",
         "sync.table_updated": "Aktualisiert",
         "sync.table_actions": "Aktionen",
+        "sync.reset.title": "Gefahrenzone",
+        "sync.reset.subtitle": "Löscht alle importierten Hörbücher, Podcasts, Folgen sowie Sync-/Fortschritt-Historie für dieses Konto.",
+        "sync.reset.first_confirm": "Zurücksetzen bestätigen (Schritt 1)",
+        "sync.reset.second_confirm": "Zurücksetzen bestätigen (Schritt 2)",
+        "sync.reset.type_reset": "Gib RESET zur Bestätigung ein",
+        "sync.reset.placeholder": "RESET",
         "history.title": "Verlauf",
         "podcast.next_episode": "Nächste Folge",
         "podcast.all_done": "Alle Folgen abgeschlossen",
@@ -250,6 +280,12 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "message.no_collected": "Noch keine gesammelten Hörbücher. Nutze Sync-Einrichtung -> Gesammelte Hörbücher importieren.",
         "message.no_podcasts": "Noch keine Podcasts importiert. Nutze Sync-Einrichtung -> Podcasts importieren (ABS + iTunes).",
         "message.no_podcast_episodes": "Noch keine Podcast-Folgen importiert.",
+        "message.mark_prev_heard_invalid": "Bitte eine gültige Folgennummer größer 0 eingeben.",
+        "message.mark_prev_heard_none": "Keine nummerierten Folgen bis zur gewählten Nummer gefunden.",
+        "message.mark_prev_heard_done": "%(count)s Podcast-Folgen als gehört vorgemerkt (bis Folge %(episode)s).",
+        "message.mark_range_unheard_invalid": "Bitte einen gültigen Folgenbereich eingeben (von <= bis, beide > 0).",
+        "message.mark_range_unheard_none": "Keine nummerierten Folgen im gewählten Bereich gefunden.",
+        "message.mark_range_unheard_done": "%(count)s Podcast-Folgen als ungehört vorgemerkt (Folge %(from)s bis %(to)s).",
         "common.none": "-",
         "common.yes": "Ja",
         "common.no": "Nein",
@@ -273,9 +309,9 @@ def get_conn():
     return pymysql.connect(
         host=os.getenv("DB_HOST", "127.0.0.1"),
         port=int(os.getenv("DB_PORT", "3306")),
-        user=os.getenv("DB_USER", "abshelflife"),
+        user=os.getenv("DB_USER", "abs_tracked"),
         password=get_db_password(),
-        database=os.getenv("DB_NAME", "abshelflife"),
+        database=os.getenv("DB_NAME", "abs_tracked"),
         cursorclass=pymysql.cursors.DictCursor,
         autocommit=True,
     )
@@ -474,6 +510,10 @@ def ensure_ui_schema() -> None:
                 cur.execute(
                     "ALTER TABLE ui_collected_items ADD COLUMN collection_status ENUM('collected','missing') NOT NULL DEFAULT 'collected'"
                 )
+            except Exception:
+                pass
+            try:
+                cur.execute("ALTER TABLE ui_collected_items ADD COLUMN isbn VARCHAR(32) NULL")
             except Exception:
                 pass
             cur.execute(
@@ -871,7 +911,8 @@ def parse_episode_number(text: str) -> int | None:
     patterns = [
         r"\bS\d{1,2}E(\d{1,4})\b",
         r"\b(?:episode|ep|folge)\s*#?\s*(\d{1,4})\b",
-        r"^\s*(\d{1,4})\s*[-.:]",
+        r"^\s*#?\s*(\d{1,5})\s*[-.:]",
+        r"^\s*#?\s*(\d{1,5})\b",
     ]
     for pattern in patterns:
         match = re.search(pattern, raw, flags=re.IGNORECASE)
@@ -879,11 +920,49 @@ def parse_episode_number(text: str) -> int | None:
             continue
         try:
             number = int(match.group(1))
-            if number > 0:
+            if 0 < number <= 50000:
                 return number
         except Exception:
             continue
     return None
+
+
+def strip_episode_number_prefix(text: str) -> str:
+    raw = (text or "").strip()
+    if not raw:
+        return ""
+    cleaned = re.sub(r"^\s*#?\s*\d{1,5}\s*[-.:]?\s*", "", raw, count=1)
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    return cleaned or raw
+
+
+def load_abs_episode_lookup(owner_user_id: int, target_id: str, library_item_id: str) -> tuple[dict[int, str], dict[str, str]]:
+    creds = get_user_target_credentials(owner_user_id).get(target_id) or {}
+    base_url = str(creds.get("url") or "")
+    token = str(creds.get("token") or "")
+    if not base_url or not token or not library_item_id:
+        return {}, {}
+    try:
+        item_detail = abs_get_json(base_url, token, f"/api/items/{library_item_id}")
+    except Exception:
+        item_detail = {}
+    item_media = (item_detail.get("media") or {}) if isinstance(item_detail, dict) else {}
+    episodes = item_media.get("episodes", []) if isinstance(item_media, dict) else []
+
+    by_no: dict[int, str] = {}
+    by_title: dict[str, str] = {}
+    for ep in episodes:
+        ep_id = str(ep.get("id") or "").strip()
+        if not ep_id:
+            continue
+        ep_title = str(ep.get("title") or "")
+        ep_no = parse_episode_number(ep_title)
+        if ep_no is not None and ep_no not in by_no:
+            by_no[ep_no] = ep_id
+        title_key = normalize_text_key(ep_title)
+        if title_key and title_key not in by_title:
+            by_title[title_key] = ep_id
+    return by_no, by_title
 
 
 def normalize_series_group_name(series_name: str) -> str:
@@ -961,6 +1040,17 @@ def itunes_lookup_podcast(title: str, author: str) -> dict[str, str]:
         }
     except Exception:
         return {}
+
+
+def audible_lookup_podcast_show(title: str, author: str) -> dict[str, str]:
+    episodes = audible_podcast_fallback_episodes(title, author, limit=1)
+    if not episodes:
+        return {}
+    first = episodes[0]
+    return {
+        "image_url": str(first.get("image_url") or ""),
+        "author": str(first.get("author") or author or ""),
+    }
 
 
 def normalize_text_key(value: str) -> str:
@@ -1051,28 +1141,13 @@ def audible_podcast_fallback_episodes(title: str, author: str, limit: int = 50) 
     query = " ".join([title or "", author or ""]).strip()
     if not query:
         return []
-
-    base_url = os.getenv("AUDIBLE_API_BASE_URL", "https://api.audible.com").rstrip("/")
-    bearer = os.getenv("AUDIBLE_API_BEARER_TOKEN", "").strip()
-    marketplace = os.getenv("AUDIBLE_MARKETPLACE", "us").strip()
-    if not bearer:
-        return []
-
-    try:
-        response = requests.get(
-            f"{base_url}/1.0/catalog/products",
-            params={
-                "num_results": limit,
-                "keywords": query,
-                "response_groups": "product_desc,contributors,product_attrs,media,series",
-                "marketplace": marketplace,
-            },
-            headers={"Authorization": f"Bearer {bearer}"},
-            timeout=18,
-        )
-        response.raise_for_status()
-        products = response.json().get("products", [])
-    except Exception:
+    products = audible_catalog_products(
+        keywords=query,
+        num_results=limit,
+        response_groups="product_desc,contributors,product_attrs,media,series",
+        timeout=18,
+    )
+    if not products:
         return []
 
     episodes: list[dict[str, Any]] = []
@@ -1124,7 +1199,14 @@ def audible_podcast_fallback_episodes(title: str, author: str, limit: int = 50) 
     return episodes
 
 
-def import_abs_catalog(owner_user_id: int, import_books: bool, import_podcasts: bool, enrich_podcasts: bool = False) -> dict[str, int]:
+def import_abs_catalog(
+    owner_user_id: int,
+    import_books: bool,
+    import_podcasts: bool,
+    enrich_podcasts: bool = False,
+    prefer_book_metadata: bool = False,
+    progress_log_every: int = 0,
+) -> dict[str, int]:
     creds_map = get_user_target_credentials(owner_user_id)
     stats = {"books": 0, "podcasts": 0, "podcast_episodes": 0}
     if not creds_map:
@@ -1182,36 +1264,151 @@ def import_abs_catalog(owner_user_id: int, import_books: bool, import_podcasts: 
                                 published_year = parse_int(metadata.get("publishedYear") or metadata.get("publishYear"), 0)
                                 asin = str(metadata.get("asin") or "")
                                 isbn = str(metadata.get("isbn") or "")
+                                source = "abs"
+                                audible_cover_url = ""
+                                existing_row = find_existing_collected_item(
+                                    cur,
+                                    owner_user_id,
+                                    asin,
+                                    isbn,
+                                    title,
+                                    author,
+                                    published_year,
+                                )
+                                if prefer_book_metadata:
+                                    existing_source = str((existing_row or {}).get("source") or "")
+                                    existing_cover = str((existing_row or {}).get("cover_url") or "")
+                                    existing_asin = str((existing_row or {}).get("asin") or "")
+                                    existing_isbn = str((existing_row or {}).get("isbn") or "")
+                                    needs_enrichment = (
+                                        not existing_row
+                                        or existing_source != "audible"
+                                        or not existing_cover
+                                        or not (asin or existing_asin)
+                                        or not (isbn or existing_isbn)
+                                    )
+                                    if needs_enrichment:
+                                        try:
+                                            enrich = enrich_with_audible(title, author, asin, isbn, series_name, "")
+                                            asin = str(enrich.get("asin") or asin)
+                                            isbn = str(enrich.get("isbn") or isbn)
+                                            series_name = str(enrich.get("series_name") or series_name)
+                                            audible_cover_url = str(enrich.get("cover_url") or "")
+                                            if str(enrich.get("source") or "") == "audible":
+                                                source = "audible"
+                                        except Exception:
+                                            pass
                                 duration_sec = float(((item.get("media") or {}).get("duration") or 0.0))
                                 canonical_key = build_canonical_key(asin, isbn, title, author, duration_sec)
-                                cover_url = f"{cred['url']}/api/items/{item_id}/cover"
-                                cur.execute(
-                                    """
-                                    INSERT INTO ui_collected_items
-                                    (owner_user_id, target_id, library_item_id, media_type, title, author, series_name, published_year, asin, cover_url, collection_status, source)
-                                    VALUES (%s,%s,%s,'book',%s,%s,%s,%s,%s,%s,'collected','abs')
-                                    ON DUPLICATE KEY UPDATE
-                                      title=VALUES(title),
-                                      author=VALUES(author),
-                                      series_name=VALUES(series_name),
-                                      published_year=VALUES(published_year),
-                                      asin=VALUES(asin),
-                                      cover_url=VALUES(cover_url),
-                                      collection_status='collected',
-                                      updated_at=CURRENT_TIMESTAMP
-                                    """,
-                                    (
-                                        owner_user_id,
-                                        target_id,
-                                        item_id,
-                                        title,
-                                        author,
-                                        series_name,
-                                        published_year if published_year > 0 else None,
-                                        asin,
-                                        cover_url,
-                                    ),
+                                cover_url = audible_cover_url or f"{cred['url']}/api/items/{item_id}/cover"
+                                progress_payload = abs_get_optional_json(cred["url"], cred["token"], f"/api/me/progress/{item_id}") or {}
+                                progress_ratio = float(progress_payload.get("progress") or 0.0) if progress_payload else 0.0
+                                is_finished = 1 if bool(progress_payload.get("isFinished")) or progress_ratio >= 0.98 else 0
+
+                                current_progress = float((existing_row or {}).get("progress") or 0.0)
+                                current_finished = 1 if int((existing_row or {}).get("is_finished") or 0) == 1 or current_progress >= 0.98 else 0
+                                prefer_new_primary = (
+                                    (is_finished > current_finished)
+                                    or (is_finished == current_finished and progress_ratio > current_progress + 1e-9)
                                 )
+
+                                if existing_row:
+                                    if prefer_new_primary:
+                                        cur.execute(
+                                            """
+                                            UPDATE ui_collected_items
+                                            SET
+                                              target_id = %s,
+                                              library_item_id = %s,
+                                              title = %s,
+                                              author = %s,
+                                              series_name = %s,
+                                              published_year = %s,
+                                              asin = NULLIF(%s,''),
+                                              isbn = NULLIF(%s,''),
+                                              cover_url = %s,
+                                              source = %s,
+                                              collection_status = 'collected',
+                                              updated_at = CURRENT_TIMESTAMP
+                                            WHERE id = %s
+                                            """,
+                                            (
+                                                target_id,
+                                                item_id,
+                                                title,
+                                                author,
+                                                series_name,
+                                                published_year if published_year > 0 else None,
+                                                asin,
+                                                isbn,
+                                                cover_url,
+                                                source,
+                                                int(existing_row["id"]),
+                                            ),
+                                        )
+                                    else:
+                                        cur.execute(
+                                            """
+                                            UPDATE ui_collected_items
+                                            SET
+                                              title = %s,
+                                              author = %s,
+                                              series_name = %s,
+                                              published_year = %s,
+                                              asin = COALESCE(NULLIF(%s,''), asin),
+                                              isbn = COALESCE(NULLIF(%s,''), isbn),
+                                              cover_url = CASE WHEN COALESCE(cover_url, '') = '' THEN %s ELSE cover_url END,
+                                              source = CASE WHEN source = 'abs' AND %s <> 'abs' THEN %s ELSE source END,
+                                              collection_status = 'collected',
+                                              updated_at = CURRENT_TIMESTAMP
+                                            WHERE id = %s
+                                            """,
+                                            (
+                                                title,
+                                                author,
+                                                series_name,
+                                                published_year if published_year > 0 else None,
+                                                asin,
+                                                isbn,
+                                                cover_url,
+                                                source,
+                                                source,
+                                                int(existing_row["id"]),
+                                            ),
+                                        )
+                                else:
+                                    cur.execute(
+                                        """
+                                        INSERT INTO ui_collected_items
+                                        (owner_user_id, target_id, library_item_id, media_type, title, author, series_name, published_year, asin, isbn, cover_url, collection_status, source)
+                                        VALUES (%s,%s,%s,'book',%s,%s,%s,%s,%s,%s,%s,'collected',%s)
+                                        ON DUPLICATE KEY UPDATE
+                                          media_type=VALUES(media_type),
+                                          title=VALUES(title),
+                                          author=VALUES(author),
+                                          series_name=VALUES(series_name),
+                                          published_year=VALUES(published_year),
+                                          asin=VALUES(asin),
+                                          isbn=VALUES(isbn),
+                                          cover_url=VALUES(cover_url),
+                                          collection_status='collected',
+                                          source=VALUES(source),
+                                          updated_at=CURRENT_TIMESTAMP
+                                        """,
+                                        (
+                                            owner_user_id,
+                                            target_id,
+                                            item_id,
+                                            title,
+                                            author,
+                                            series_name,
+                                            published_year if published_year > 0 else None,
+                                            asin,
+                                            isbn,
+                                            cover_url,
+                                            source,
+                                        ),
+                                    )
                                 cur.execute(
                                     """
                                     INSERT INTO item_identity
@@ -1242,12 +1439,11 @@ def import_abs_catalog(owner_user_id: int, import_books: bool, import_podcasts: 
                                     ),
                                 )
                                 stats["books"] += 1
+                                if progress_log_every > 0 and stats["books"] % progress_log_every == 0:
+                                    print(f"import progress user={owner_user_id} books={stats['books']} podcasts={stats['podcasts']} episodes={stats['podcast_episodes']}", flush=True)
 
                                 # Full progress backfill: /api/me is often incomplete, so resolve per-item progress.
-                                progress_payload = abs_get_optional_json(cred["url"], cred["token"], f"/api/me/progress/{item_id}") or {}
                                 if progress_payload:
-                                    progress_ratio = float(progress_payload.get("progress") or 0.0)
-                                    is_finished = 1 if bool(progress_payload.get("isFinished")) or progress_ratio >= 0.98 else 0
                                     if progress_ratio > 0 or is_finished == 1:
                                         current_time_sec = float(progress_payload.get("currentTime") or 0.0)
                                         duration_sec_progress = float(progress_payload.get("duration") or duration_sec or 0.0)
@@ -1327,46 +1523,134 @@ def import_abs_catalog(owner_user_id: int, import_books: bool, import_podcasts: 
                                 release_date = str(metadata.get("releaseDate") or "")
                                 language = str(metadata.get("language") or "")
 
-                                if enrich_podcasts and (not image_url or not itunes_id):
+                                show_source = "abs"
+                                if enrich_podcasts:
                                     enrich = itunes_lookup_podcast(title, author)
-                                    image_url = image_url or enrich.get("image_url", "")
-                                    feed_url = feed_url or enrich.get("feed_url", "")
-                                    itunes_id = itunes_id or enrich.get("itunes_id", "")
-                                    itunes_page_url = itunes_page_url or enrich.get("itunes_page_url", "")
+                                    if enrich:
+                                        if str(enrich.get("image_url") or ""):
+                                            image_url = str(enrich.get("image_url") or "")
+                                        if str(enrich.get("feed_url") or ""):
+                                            feed_url = str(enrich.get("feed_url") or "")
+                                        if str(enrich.get("itunes_id") or ""):
+                                            itunes_id = str(enrich.get("itunes_id") or "")
+                                        if str(enrich.get("itunes_page_url") or ""):
+                                            itunes_page_url = str(enrich.get("itunes_page_url") or "")
+                                        show_source = "itunes"
+                                    else:
+                                        audible_meta = audible_lookup_podcast_show(title, author)
+                                        if str(audible_meta.get("image_url") or "") and not image_url:
+                                            image_url = str(audible_meta.get("image_url") or "")
+                                        if str(audible_meta.get("author") or "") and not author:
+                                            author = str(audible_meta.get("author") or author)
+                                        if audible_meta:
+                                            show_source = "audible"
 
-                                cur.execute(
-                                    """
-                                    INSERT INTO ui_podcast_shows
-                                    (owner_user_id, target_id, library_item_id, title, author, feed_url, image_url, itunes_id, itunes_page_url, release_date, language, source)
-                                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                                    ON DUPLICATE KEY UPDATE
-                                      title=VALUES(title),
-                                      author=VALUES(author),
-                                      feed_url=VALUES(feed_url),
-                                      image_url=VALUES(image_url),
-                                      itunes_id=VALUES(itunes_id),
-                                      itunes_page_url=VALUES(itunes_page_url),
-                                      release_date=VALUES(release_date),
-                                      language=VALUES(language),
-                                      source=VALUES(source),
-                                      updated_at=CURRENT_TIMESTAMP
-                                    """,
-                                    (
-                                        owner_user_id,
-                                        target_id,
-                                        item_id,
-                                        title,
-                                        author,
-                                        feed_url,
-                                        image_url,
-                                        itunes_id,
-                                        itunes_page_url,
-                                        release_date,
-                                        language,
-                                        "itunes" if enrich_podcasts else "abs",
-                                    ),
+                                existing_show = find_existing_podcast_show(
+                                    cur,
+                                    owner_user_id,
+                                    target_id,
+                                    itunes_id,
+                                    feed_url,
+                                    title,
+                                    author,
                                 )
+                                effective_target_id = target_id
+                                effective_library_item_id = item_id
+                                if existing_show:
+                                    existing_target_id = str(existing_show.get("target_id") or "")
+                                    existing_library_item_id = str(existing_show.get("library_item_id") or "")
+                                    existing_score = podcast_instance_progress_score(cur, existing_target_id, existing_library_item_id)
+                                    incoming_score = podcast_instance_progress_score(cur, target_id, item_id)
+                                    existing_itunes_id = str(existing_show.get("itunes_id") or "")
+                                    prefer_new_primary = (
+                                        (not existing_itunes_id and bool(itunes_id))
+                                        or source_rank(show_source) > source_rank(str(existing_show.get("source") or ""))
+                                        or incoming_score > existing_score + 1e-9
+                                    )
+                                    if prefer_new_primary:
+                                        effective_target_id = target_id
+                                        effective_library_item_id = item_id
+                                    else:
+                                        effective_target_id = existing_target_id
+                                        effective_library_item_id = existing_library_item_id
+
+                                    merged_source = show_source if source_rank(show_source) >= source_rank(str(existing_show.get("source") or "")) else str(existing_show.get("source") or "abs")
+                                    cur.execute(
+                                        """
+                                        UPDATE ui_podcast_shows
+                                        SET
+                                          target_id = %s,
+                                          library_item_id = %s,
+                                          title = %s,
+                                          author = COALESCE(NULLIF(%s,''), author),
+                                          feed_url = COALESCE(NULLIF(%s,''), feed_url),
+                                          image_url = CASE WHEN %s = 'itunes' THEN COALESCE(NULLIF(%s,''), image_url) ELSE CASE WHEN COALESCE(image_url, '') = '' THEN COALESCE(NULLIF(%s,''), image_url) ELSE image_url END END,
+                                          itunes_id = COALESCE(NULLIF(%s,''), itunes_id),
+                                          itunes_page_url = COALESCE(NULLIF(%s,''), itunes_page_url),
+                                          release_date = COALESCE(NULLIF(%s,''), release_date),
+                                          language = COALESCE(NULLIF(%s,''), language),
+                                          source = %s,
+                                          updated_at = CURRENT_TIMESTAMP
+                                        WHERE id = %s
+                                        """,
+                                        (
+                                            effective_target_id,
+                                            effective_library_item_id,
+                                            title,
+                                            author,
+                                            feed_url,
+                                            show_source,
+                                            image_url,
+                                            image_url,
+                                            itunes_id,
+                                            itunes_page_url,
+                                            release_date,
+                                            language,
+                                            merged_source,
+                                            int(existing_show["id"]),
+                                        ),
+                                    )
+                                else:
+                                    cur.execute(
+                                        """
+                                        INSERT INTO ui_podcast_shows
+                                        (owner_user_id, target_id, library_item_id, title, author, feed_url, image_url, itunes_id, itunes_page_url, release_date, language, source)
+                                        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                                        ON DUPLICATE KEY UPDATE
+                                          title=VALUES(title),
+                                          author=COALESCE(NULLIF(VALUES(author),''), author),
+                                          feed_url=COALESCE(NULLIF(VALUES(feed_url),''), feed_url),
+                                          image_url=COALESCE(NULLIF(VALUES(image_url),''), image_url),
+                                          itunes_id=COALESCE(NULLIF(VALUES(itunes_id),''), itunes_id),
+                                          itunes_page_url=COALESCE(NULLIF(VALUES(itunes_page_url),''), itunes_page_url),
+                                          release_date=COALESCE(NULLIF(VALUES(release_date),''), release_date),
+                                          language=COALESCE(NULLIF(VALUES(language),''), language),
+                                          source=VALUES(source),
+                                          updated_at=CURRENT_TIMESTAMP
+                                        """,
+                                        (
+                                            owner_user_id,
+                                            target_id,
+                                            item_id,
+                                            title,
+                                            author,
+                                            feed_url,
+                                            image_url,
+                                            itunes_id,
+                                            itunes_page_url,
+                                            release_date,
+                                            language,
+                                            show_source,
+                                        ),
+                                    )
+
                                 stats["podcasts"] += 1
+                                if progress_log_every > 0 and stats["podcasts"] % progress_log_every == 0:
+                                    print(f"import progress user={owner_user_id} books={stats['books']} podcasts={stats['podcasts']} episodes={stats['podcast_episodes']}", flush=True)
+
+                                # Keep one canonical show row: only import episodes for the selected primary source mapping.
+                                if effective_target_id != target_id or effective_library_item_id != item_id:
+                                    continue
 
                                 abs_episodes: list[dict[str, Any]] = []
                                 try:
@@ -1450,6 +1734,8 @@ def import_abs_catalog(owner_user_id: int, import_books: bool, import_podcasts: 
                                         ),
                                     )
                                     stats["podcast_episodes"] += 1
+                                    if progress_log_every > 0 and stats["podcast_episodes"] % progress_log_every == 0:
+                                        print(f"import progress user={owner_user_id} books={stats['books']} podcasts={stats['podcasts']} episodes={stats['podcast_episodes']}", flush=True)
 
                                 if imported_ids:
                                     placeholders = ",".join(["%s"] * len(imported_ids))
@@ -1465,39 +1751,6 @@ def import_abs_catalog(owner_user_id: int, import_books: bool, import_podcasts: 
                                     )
                         page += 1
     return stats
-
-
-def _fetch_abs_book_item_ids(base_url: str, token: str) -> set[str]:
-    item_ids: set[str] = set()
-    libs_payload = abs_get_optional_json(base_url, token, "/api/libraries") or {}
-    libraries = libs_payload.get("libraries", []) if isinstance(libs_payload, dict) else []
-    for lib in libraries:
-        if str(lib.get("mediaType") or "").lower() != "book":
-            continue
-        library_id = str(lib.get("id") or "")
-        if not library_id:
-            continue
-        page = 0
-        while True:
-            items_payload = abs_get_optional_json(
-                base_url,
-                token,
-                f"/api/libraries/{library_id}/items",
-                {"limit": 200, "page": page, "minified": 1},
-            )
-            if not isinstance(items_payload, dict):
-                break
-            results = items_payload.get("results", [])
-            if not isinstance(results, list) or not results:
-                break
-            for item in results:
-                item_id = str(item.get("id") or "")
-                if item_id:
-                    item_ids.add(item_id)
-            if len(results) < 200:
-                break
-            page += 1
-    return item_ids
 
 
 def rebuild_progress_from_abs(owner_user_id: int) -> dict[str, int]:
@@ -1638,153 +1891,340 @@ def rebuild_progress_from_abs(owner_user_id: int) -> dict[str, int]:
     return stats
 
 
-def _dedupe_collected_key(asin: str, isbn: str, title: str, author: str, year: int) -> str:
-    asin_norm = (asin or "").strip().upper()
-    if asin_norm:
-        return f"asin:{asin_norm}"
-    isbn_norm = (isbn or "").strip().replace("-", "").replace(" ", "").upper()
-    if isbn_norm:
-        return f"isbn:{isbn_norm}"
-    title_norm = " ".join((title or "").strip().lower().split())
-    author_norm = " ".join((author or "").strip().lower().split())
-    return f"text:{title_norm}|{author_norm}|{int(year or 0)}"
-
-
-def cleanup_collected_library(owner_user_id: int) -> dict[str, int]:
-    creds_map = get_user_target_credentials(owner_user_id)
-    stats = {"before": 0, "after": 0, "marked_missing": 0, "merged_duplicates": 0, "merged_groups": 0, "targets": 0}
-
+def sync_book_metadata_from_providers(owner_user_id: int, only_missing_cover: bool = True) -> dict[str, int]:
+    stats = {"checked": 0, "updated": 0, "no_match": 0}
     with get_conn() as conn:
         with conn.cursor() as cur:
-            cur.execute(
-                "SELECT COUNT(*) AS c FROM ui_collected_items WHERE owner_user_id = %s AND media_type = 'book'",
-                (owner_user_id,),
-            )
-            stats["before"] = int((cur.fetchone() or {}).get("c") or 0)
-
-            live_ids_by_target: dict[str, set[str]] = {}
-            for target_id, cred in creds_map.items():
-                if not cred.get("url") or not cred.get("token"):
-                    continue
-                live_ids = _fetch_abs_book_item_ids(cred["url"], cred["token"])
-                live_ids_by_target[target_id] = live_ids
-                stats["targets"] += 1
-
-            if live_ids_by_target:
-                for target_id, live_ids in live_ids_by_target.items():
-                    cur.execute(
-                        """
-                        UPDATE ui_collected_items
-                        SET collection_status = 'missing'
-                        WHERE owner_user_id = %s
-                          AND media_type = 'book'
-                          AND target_id = %s
-                        """,
-                        (owner_user_id, target_id),
-                    )
-                    cur.execute(
-                        """
-                        SELECT id, library_item_id
-                        FROM ui_collected_items
-                        WHERE owner_user_id = %s
-                          AND media_type = 'book'
-                          AND target_id = %s
-                        """,
-                        (owner_user_id, target_id),
-                    )
-                    live_row_ids: list[int] = []
-                    missing_count = 0
-                    for row in cur.fetchall():
-                        if str(row.get("library_item_id") or "") in live_ids:
-                            live_row_ids.append(int(row["id"]))
-                        else:
-                            missing_count += 1
-                    if live_row_ids:
-                        placeholders = ",".join(["%s"] * len(live_row_ids))
-                        cur.execute(
-                            f"UPDATE ui_collected_items SET collection_status='collected' WHERE owner_user_id = %s AND id IN ({placeholders})",
-                            [owner_user_id, *live_row_ids],
-                        )
-                    stats["marked_missing"] += missing_count
-
-            cur.execute(
-                """
-                SELECT
-                  c.id,
-                  c.title,
-                  c.author,
-                  c.published_year,
-                  c.asin,
-                  c.cover_url,
-                  c.series_name,
-                  c.collection_status,
-                  c.updated_at,
-                  COALESCE(ii.isbn, '') AS isbn
-                FROM ui_collected_items c
-                LEFT JOIN item_identity ii
-                  ON ii.target_id = c.target_id
-                 AND ii.library_item_id = c.library_item_id
-                WHERE c.owner_user_id = %s
-                  AND c.media_type = 'book'
-                ORDER BY c.updated_at DESC, c.id DESC
-                """,
-                (owner_user_id,),
-            )
-            rows = cur.fetchall()
-            groups: dict[str, list[dict[str, Any]]] = {}
-            for row in rows:
-                key = _dedupe_collected_key(
-                    str(row.get("asin") or ""),
-                    str(row.get("isbn") or ""),
-                    str(row.get("title") or ""),
-                    str(row.get("author") or ""),
-                    int(row.get("published_year") or 0),
-                )
-                groups.setdefault(key, []).append(row)
-
-            delete_ids: list[int] = []
-            for grouped_rows in groups.values():
-                if len(grouped_rows) <= 1:
-                    continue
-                stats["merged_groups"] += 1
-                scored: list[tuple[int, dict[str, Any]]] = []
-                for row in grouped_rows:
-                    score = 0
-                    if str(row.get("collection_status") or "collected") == "collected":
-                        score += 8
-                    if str(row.get("asin") or "").strip():
-                        score += 16
-                    if str(row.get("isbn") or "").strip():
-                        score += 12
-                    if str(row.get("cover_url") or "").strip():
-                        score += 4
-                    if str(row.get("series_name") or "").strip():
-                        score += 2
-                    if int(row.get("published_year") or 0) > 0:
-                        score += 1
-                    scored.append((score, row))
-                scored.sort(key=lambda pair: (pair[0], pair[1].get("updated_at"), int(pair[1].get("id") or 0)), reverse=True)
-                keep_id = int(scored[0][1]["id"])
-                for _, row in scored[1:]:
-                    rid = int(row["id"])
-                    if rid != keep_id:
-                        delete_ids.append(rid)
-
-            if delete_ids:
-                placeholders = ",".join(["%s"] * len(delete_ids))
+            if only_missing_cover:
                 cur.execute(
-                    f"DELETE FROM ui_collected_items WHERE owner_user_id = %s AND id IN ({placeholders})",
-                    [owner_user_id, *delete_ids],
+                    """
+                    SELECT id, title, author, asin, isbn, series_name, cover_url, source
+                    FROM ui_collected_items
+                    WHERE owner_user_id = %s
+                      AND media_type = 'book'
+                      AND (
+                        COALESCE(TRIM(cover_url), '') = ''
+                        OR cover_url LIKE %s
+                      )
+                    ORDER BY id DESC
+                    """,
+                    (owner_user_id, "%/api/items/%/cover"),
                 )
-                stats["merged_duplicates"] = len(delete_ids)
+            else:
+                cur.execute(
+                    """
+                    SELECT id, title, author, asin, isbn, series_name, cover_url, source
+                    FROM ui_collected_items
+                    WHERE owner_user_id = %s
+                      AND media_type = 'book'
+                    ORDER BY id DESC
+                    """,
+                    (owner_user_id,),
+                )
+            rows = cur.fetchall()
 
-            cur.execute(
-                "SELECT COUNT(*) AS c FROM ui_collected_items WHERE owner_user_id = %s AND media_type = 'book'",
-                (owner_user_id,),
-            )
-            stats["after"] = int((cur.fetchone() or {}).get("c") or 0)
+            for row in rows:
+                stats["checked"] += 1
+                title = str(row.get("title") or "")
+                author = str(row.get("author") or "")
+                asin = str(row.get("asin") or "")
+                isbn = str(row.get("isbn") or "")
+                series_name = str(row.get("series_name") or "")
+                cover_url = str(row.get("cover_url") or "")
+                source = str(row.get("source") or "abs")
 
+                try:
+                    enriched = enrich_with_audible(title, author, asin, isbn, series_name, "")
+                except Exception:
+                    stats["no_match"] += 1
+                    continue
+
+                enriched_asin = str(enriched.get("asin") or "")
+                enriched_isbn = str(enriched.get("isbn") or "")
+                enriched_series = str(enriched.get("series_name") or "")
+                enriched_cover = str(enriched.get("cover_url") or "")
+                enriched_source = str(enriched.get("source") or "").strip().lower()
+
+                cover_is_missing_or_abs = not cover_url.strip() or "/api/items/" in cover_url
+                final_cover = cover_url
+                if cover_is_missing_or_abs and enriched_cover and "/api/items/" not in enriched_cover:
+                    final_cover = enriched_cover
+
+                final_asin = asin or enriched_asin
+                final_isbn = isbn or enriched_isbn
+                final_series = series_name or enriched_series
+                final_source = source
+                if enriched_source in ("audible", "goodreads", "kindle"):
+                    final_source = enriched_source
+
+                changed = (
+                    final_cover != cover_url
+                    or final_asin != asin
+                    or final_isbn != isbn
+                    or final_series != series_name
+                    or final_source != source
+                )
+
+                if not changed:
+                    if not enriched_cover and not enriched_asin and not enriched_isbn and not enriched_series:
+                        stats["no_match"] += 1
+                    continue
+
+                cur.execute(
+                    """
+                    UPDATE ui_collected_items
+                    SET
+                      asin = NULLIF(%s,''),
+                      isbn = NULLIF(%s,''),
+                      series_name = NULLIF(%s,''),
+                      cover_url = %s,
+                      source = %s,
+                      updated_at = CURRENT_TIMESTAMP
+                    WHERE id = %s
+                    """,
+                    (
+                        final_asin,
+                        final_isbn,
+                        final_series,
+                        final_cover,
+                        final_source,
+                        int(row["id"]),
+                    ),
+                )
+                stats["updated"] += 1
     return stats
+
+
+def podcast_instance_progress_score(cur: pymysql.cursors.Cursor, target_id: str, library_item_id: str) -> float:
+    cur.execute(
+        """
+        SELECT
+          COALESCE(MAX(progress), 0) AS max_progress,
+          SUM(CASE WHEN COALESCE(is_finished,0)=1 OR COALESCE(progress,0) >= 0.98 THEN 1 ELSE 0 END) AS finished_count,
+          COALESCE(MAX(last_update_ms), 0) AS last_update_ms
+        FROM progress_latest
+        WHERE target_id = %s
+          AND library_item_id = %s
+          AND episode_id <> ''
+        """,
+        (target_id, library_item_id),
+    )
+    row = cur.fetchone() or {}
+    max_progress = float(row.get("max_progress") or 0.0)
+    finished_count = int(row.get("finished_count") or 0)
+    last_update_ms = int(row.get("last_update_ms") or 0)
+    return max_progress * 1000000.0 + finished_count * 1000.0 + float(last_update_ms) / 1000.0
+
+
+def find_existing_podcast_show(
+    cur: pymysql.cursors.Cursor,
+    owner_user_id: int,
+    current_target_id: str,
+    itunes_id: str,
+    feed_url: str,
+    title: str,
+    author: str,
+) -> dict[str, Any] | None:
+    title_norm = " ".join((title or "").strip().lower().split())
+    author_norm = " ".join((author or "").strip().lower().split())
+    itunes_norm = "".join(ch for ch in (itunes_id or "").strip() if ch.isdigit())
+    if itunes_norm:
+        cur.execute(
+            """
+            SELECT id, target_id, library_item_id, itunes_id, feed_url, title, author, image_url, source
+            FROM ui_podcast_shows
+            WHERE owner_user_id = %s
+              AND target_id <> %s
+              AND REPLACE(COALESCE(itunes_id, ''), ' ', '') = %s
+            ORDER BY updated_at DESC, id DESC
+            LIMIT 1
+            """,
+            (owner_user_id, current_target_id, itunes_norm),
+        )
+        row = cur.fetchone()
+        if row:
+            return row
+
+    feed_norm = (feed_url or "").strip().lower()
+    if feed_norm:
+        cur.execute(
+            """
+            SELECT id, target_id, library_item_id, itunes_id, feed_url, title, author, image_url, source
+            FROM ui_podcast_shows
+            WHERE owner_user_id = %s
+              AND target_id <> %s
+              AND LOWER(TRIM(COALESCE(feed_url, ''))) = %s
+            ORDER BY updated_at DESC, id DESC
+            LIMIT 1
+            """,
+            (owner_user_id, current_target_id, feed_norm),
+        )
+        rows = cur.fetchall()
+        if rows:
+            for row in rows:
+                row_title = " ".join(str(row.get("title") or "").strip().lower().split())
+                if row_title == title_norm and title_norm:
+                    return row
+
+    cur.execute(
+        """
+        SELECT id, target_id, library_item_id, itunes_id, feed_url, title, author, image_url, source
+        FROM ui_podcast_shows
+        WHERE owner_user_id = %s
+          AND target_id <> %s
+          AND LOWER(TRIM(title)) = %s
+          AND LOWER(TRIM(COALESCE(author, ''))) = %s
+        ORDER BY updated_at DESC, id DESC
+        LIMIT 1
+        """,
+        (owner_user_id, current_target_id, title_norm, author_norm),
+    )
+    return cur.fetchone()
+
+
+def source_rank(value: str) -> int:
+    v = (value or "").strip().lower()
+    if v == "itunes":
+        return 3
+    if v == "audible":
+        return 2
+    if v == "abs":
+        return 1
+    return 0
+
+
+def find_existing_collected_item(
+    cur: pymysql.cursors.Cursor,
+    owner_user_id: int,
+    asin: str,
+    isbn: str,
+    title: str,
+    author: str,
+    published_year: int,
+) -> dict[str, Any] | None:
+    title_norm = " ".join((title or "").strip().lower().split())
+    author_norm = " ".join((author or "").strip().lower().split())
+    year_norm = int(published_year or 0)
+
+    asin_norm = (asin or "").strip().upper()
+    if asin_norm:
+        cur.execute(
+            """
+            SELECT
+              c.id,
+              c.target_id,
+              c.library_item_id,
+              c.title,
+              c.author,
+              c.published_year,
+              c.asin,
+              c.isbn,
+              c.cover_url,
+              c.source,
+              COALESCE(pl.progress, 0) AS progress,
+              COALESCE(pl.is_finished, 0) AS is_finished
+            FROM ui_collected_items c
+            LEFT JOIN progress_latest pl
+              ON pl.target_id = c.target_id
+             AND pl.library_item_id = c.library_item_id
+             AND pl.episode_id = ''
+            WHERE c.owner_user_id = %s
+              AND c.media_type = 'book'
+              AND UPPER(TRIM(COALESCE(c.asin, ''))) = %s
+            ORDER BY c.updated_at DESC, c.id DESC
+            """,
+            (owner_user_id, asin_norm),
+        )
+        rows = cur.fetchall()
+        if rows:
+            if not title_norm:
+                return rows[0]
+            for row in rows:
+                row_title = " ".join(str(row.get("title") or "").strip().lower().split())
+                row_author = " ".join(str(row.get("author") or "").strip().lower().split())
+                row_year = int(row.get("published_year") or 0)
+                if row_title == title_norm and (not author_norm or row_author == author_norm):
+                    return row
+                if row_title == title_norm and year_norm > 0 and row_year == year_norm:
+                    return row
+            for row in rows:
+                row_title = " ".join(str(row.get("title") or "").strip().lower().split())
+                if row_title == title_norm:
+                    return row
+            return None
+
+    isbn_norm = "".join(ch for ch in (isbn or "").upper() if ch.isalnum())
+    if isbn_norm:
+        cur.execute(
+            """
+            SELECT
+              c.id,
+              c.target_id,
+              c.library_item_id,
+              c.title,
+              c.author,
+              c.published_year,
+              c.asin,
+              c.isbn,
+              c.cover_url,
+              c.source,
+              COALESCE(pl.progress, 0) AS progress,
+              COALESCE(pl.is_finished, 0) AS is_finished
+            FROM ui_collected_items c
+            LEFT JOIN progress_latest pl
+              ON pl.target_id = c.target_id
+             AND pl.library_item_id = c.library_item_id
+             AND pl.episode_id = ''
+            WHERE c.owner_user_id = %s
+              AND c.media_type = 'book'
+              AND UPPER(REPLACE(REPLACE(COALESCE(c.isbn, ''), '-', ''), ' ', '')) = %s
+            ORDER BY c.updated_at DESC, c.id DESC
+            """,
+            (owner_user_id, isbn_norm),
+        )
+        rows = cur.fetchall()
+        if rows:
+            if not title_norm:
+                return rows[0]
+            for row in rows:
+                row_title = " ".join(str(row.get("title") or "").strip().lower().split())
+                row_author = " ".join(str(row.get("author") or "").strip().lower().split())
+                if row_title == title_norm and (not author_norm or row_author == author_norm):
+                    return row
+            for row in rows:
+                row_title = " ".join(str(row.get("title") or "").strip().lower().split())
+                if row_title == title_norm:
+                    return row
+            return None
+
+    cur.execute(
+        """
+        SELECT
+          c.id,
+          c.target_id,
+          c.library_item_id,
+          c.asin,
+          c.isbn,
+          c.cover_url,
+          c.source,
+          COALESCE(pl.progress, 0) AS progress,
+          COALESCE(pl.is_finished, 0) AS is_finished
+        FROM ui_collected_items c
+        LEFT JOIN progress_latest pl
+          ON pl.target_id = c.target_id
+         AND pl.library_item_id = c.library_item_id
+         AND pl.episode_id = ''
+        WHERE c.owner_user_id = %s
+          AND c.media_type = 'book'
+          AND LOWER(TRIM(c.title)) = %s
+          AND LOWER(TRIM(COALESCE(c.author, ''))) = %s
+          AND COALESCE(c.published_year, 0) = %s
+        ORDER BY c.updated_at DESC, c.id DESC
+        LIMIT 1
+        """,
+        (owner_user_id, title_norm, author_norm, int(published_year or 0)),
+    )
+    return cur.fetchone()
 
 
 def _normalize_identifier(value: str) -> str:
@@ -2024,26 +2464,209 @@ def openlibrary_search(query: str) -> list[dict[str, Any]]:
     return results
 
 
-def audible_search(query: str, limit: int = 12) -> list[dict[str, Any]]:
-    base_url = os.getenv("AUDIBLE_API_BASE_URL", "https://api.audible.com").rstrip("/")
-    bearer = os.getenv("AUDIBLE_API_BEARER_TOKEN", "").strip()
-    marketplace = os.getenv("AUDIBLE_MARKETPLACE", "us").strip()
-    if not bearer:
+def _provider_authorization_header() -> str:
+    return (os.getenv("METADATA_PROVIDER_AUTHORIZATION", "") or "").strip()
+
+
+def _provider_get_json(url: str, params: dict[str, Any], timeout: int = 10) -> dict[str, Any]:
+    headers: dict[str, str] = {}
+    auth = _provider_authorization_header()
+    if auth:
+        headers["Authorization"] = auth
+    resp = requests.get(url, params=params, headers=headers, timeout=timeout)
+    resp.raise_for_status()
+    payload = resp.json()
+    return payload if isinstance(payload, dict) else {}
+
+
+def _provider_book_result(raw: dict[str, Any], source: str) -> dict[str, str]:
+    series_name = ""
+    series_index = ""
+    series_data = raw.get("series")
+    if isinstance(series_data, list) and series_data:
+        first_series = series_data[0] or {}
+        if isinstance(first_series, dict):
+            series_name = str(first_series.get("series") or "")
+            series_index = str(first_series.get("sequence") or "")
+    return {
+        "title": str(raw.get("title") or ""),
+        "author": str(raw.get("author") or ""),
+        "isbn": str(raw.get("isbn") or ""),
+        "asin": str(raw.get("asin") or ""),
+        "series_name": series_name,
+        "series_index": series_index,
+        "cover_url": str(raw.get("cover") or ""),
+        "source": source,
+    }
+
+
+def goodreads_search(query: str, author: str = "", limit: int = 10) -> list[dict[str, str]]:
+    q = (query or "").strip()
+    if not q:
         return []
 
-    response = requests.get(
-        f"{base_url}/1.0/catalog/products",
-        params={
-            "num_results": limit,
-            "keywords": query,
-            "response_groups": "product_desc,contributors,series,product_attrs",
-            "marketplace": marketplace,
-        },
-        headers={"Authorization": f"Bearer {bearer}"},
+    provider_url = (os.getenv("GOODREADS_PROVIDER_URL", "") or "").strip().rstrip("/")
+    abs_tract_base = (os.getenv("ABS_TRACT_BASE_URL", "") or "").strip().rstrip("/")
+    url = ""
+    if provider_url:
+        url = f"{provider_url}/search"
+    elif abs_tract_base:
+        url = f"{abs_tract_base}/goodreads/search"
+    if not url:
+        return []
+
+    params: dict[str, Any] = {"query": q}
+    if author.strip():
+        params["author"] = author.strip()
+    payload = _provider_get_json(url, params, timeout=15)
+    matches = payload.get("matches", [])
+    if not isinstance(matches, list):
+        return []
+
+    results: list[dict[str, str]] = []
+    for m in matches[:limit]:
+        if not isinstance(m, dict):
+            continue
+        parsed = _provider_book_result(m, "goodreads")
+        if parsed.get("title"):
+            results.append(parsed)
+    return results
+
+
+def kindle_search(query: str, author: str = "", limit: int = 10) -> list[dict[str, str]]:
+    q = (query or "").strip()
+    if not q:
+        return []
+
+    provider_url = (os.getenv("KINDLE_PROVIDER_URL", "") or "").strip().rstrip("/")
+    abs_tract_base = (os.getenv("ABS_TRACT_BASE_URL", "") or "").strip().rstrip("/")
+    region = (os.getenv("KINDLE_REGION", "") or "").strip().lower() or (os.getenv("AUDIBLE_MARKETPLACE", "us") or "us").strip().lower()
+    if region == "br":
+        region = "us"
+    valid_regions = {"au", "ca", "de", "es", "fr", "in", "it", "jp", "uk", "us"}
+    if region not in valid_regions:
+        region = "us"
+
+    url = ""
+    if provider_url:
+        url = f"{provider_url}/search"
+    elif abs_tract_base:
+        url = f"{abs_tract_base}/kindle/{region}/search"
+    if not url:
+        return []
+
+    params: dict[str, Any] = {"query": q}
+    if author.strip():
+        params["author"] = author.strip()
+    payload = _provider_get_json(url, params, timeout=15)
+    matches = payload.get("matches", [])
+    if not isinstance(matches, list):
+        return []
+
+    results: list[dict[str, str]] = []
+    for m in matches[:limit]:
+        if not isinstance(m, dict):
+            continue
+        parsed = _provider_book_result(m, "kindle")
+        if parsed.get("title"):
+            results.append(parsed)
+    return results
+
+
+def audible_marketplace_domain(marketplace: str) -> str:
+    mapping = {
+        "us": "com",
+        "uk": "co.uk",
+        "de": "de",
+        "fr": "fr",
+        "it": "it",
+        "es": "es",
+        "ca": "ca",
+        "au": "com.au",
+        "jp": "co.jp",
+        "br": "com.br",
+        "in": "in",
+    }
+    return mapping.get((marketplace or "").strip().lower(), "com")
+
+
+def audible_catalog_products(
+    keywords: str,
+    num_results: int,
+    response_groups: str,
+    timeout: int = 15,
+    image_sizes: str = "2400,1000,700,500",
+) -> list[dict[str, Any]]:
+    query = (keywords or "").strip()
+    if not query:
+        return []
+
+    configured_base = os.getenv("AUDIBLE_API_BASE_URL", "https://api.audible.com").rstrip("/")
+    bearer = os.getenv("AUDIBLE_API_BEARER_TOKEN", "").strip()
+    if not bearer:
+        bearer_file = os.getenv("FILE__AUDIBLE_API_BEARER_TOKEN", "").strip()
+        if bearer_file and os.path.isfile(bearer_file):
+            try:
+                with open(bearer_file, "r", encoding="utf-8") as f:
+                    bearer = f.read().strip()
+            except Exception:
+                bearer = ""
+    marketplace = os.getenv("AUDIBLE_MARKETPLACE", "us").strip().lower()
+    marketplace_candidates: list[str] = []
+    for m in (marketplace, "de", "us"):
+        if m and m not in marketplace_candidates:
+            marketplace_candidates.append(m)
+    public_base = f"https://api.audible.{audible_marketplace_domain(marketplace)}"
+
+    base_candidates: list[str] = []
+    for base in (configured_base, public_base):
+        if base and base not in base_candidates:
+            base_candidates.append(base)
+
+    auth_modes = [True, False] if bearer else [False]
+    for candidate_marketplace in marketplace_candidates:
+        dynamic_public = f"https://api.audible.{audible_marketplace_domain(candidate_marketplace)}"
+        search_bases = list(base_candidates)
+        if dynamic_public not in search_bases:
+            search_bases.append(dynamic_public)
+        for base_url in search_bases:
+            for use_auth in auth_modes:
+                headers = {"Authorization": f"Bearer {bearer}"} if use_auth and bearer else {}
+                try:
+                    response = requests.get(
+                        f"{base_url}/1.0/catalog/products",
+                        params={
+                            "num_results": num_results,
+                            "keywords": query,
+                            "response_groups": response_groups,
+                            "products_sort_by": "Relevance",
+                            "image_sizes": image_sizes,
+                            "marketplace": candidate_marketplace,
+                        },
+                        headers=headers,
+                        timeout=timeout,
+                    )
+                    if response.status_code in (401, 403) and use_auth:
+                        continue
+                    response.raise_for_status()
+                    products = response.json().get("products", [])
+                    if isinstance(products, list):
+                        return products
+                except Exception:
+                    continue
+    return []
+
+
+def audible_search(query: str, limit: int = 12) -> list[dict[str, Any]]:
+    products = audible_catalog_products(
+        keywords=query,
+        num_results=limit,
+        response_groups="contributors,media,product_desc,product_attrs,product_extended_attrs,series",
         timeout=12,
+        image_sizes="2400,1000,700,500",
     )
-    response.raise_for_status()
-    products = response.json().get("products", [])
+    if not products:
+        return []
 
     results = []
     for p in products:
@@ -2051,6 +2674,21 @@ def audible_search(query: str, limit: int = 12) -> list[dict[str, Any]]:
         series = p.get("series", [])
         series_name = series[0].get("title", "") if series else ""
         series_index = series[0].get("sequence", "") if series else ""
+        image_url = ""
+        images = p.get("product_images", {})
+        if isinstance(images, dict):
+            preferred_sizes = ("1215", "1000", "882", "500", "315", "252", "150")
+            for size in preferred_sizes:
+                candidate = str(images.get(size) or "")
+                if candidate:
+                    image_url = candidate
+                    break
+            if not image_url:
+                for value in images.values():
+                    candidate = str(value or "")
+                    if candidate:
+                        image_url = candidate
+                        break
         results.append(
             {
                 "title": p.get("title", ""),
@@ -2059,6 +2697,7 @@ def audible_search(query: str, limit: int = 12) -> list[dict[str, Any]]:
                 "asin": p.get("asin", ""),
                 "series_name": series_name,
                 "series_index": str(series_index or ""),
+                "cover_url": image_url,
                 "source": "audible",
             }
         )
@@ -2066,35 +2705,65 @@ def audible_search(query: str, limit: int = 12) -> list[dict[str, Any]]:
 
 
 def enrich_with_audible(title: str, author: str, asin: str, isbn: str, series_name: str, series_index: str) -> dict[str, str]:
-    if asin:
+    queries: list[str] = []
+    asin_query = (asin or "").strip()
+    title_author_query = f"{title} {author}".strip()
+    if asin_query:
+        queries.append(asin_query)
+    if title_author_query and title_author_query not in queries:
+        queries.append(title_author_query)
+    if not queries:
         return {
             "asin": asin,
             "isbn": isbn,
             "series_name": series_name,
             "series_index": series_index,
+            "cover_url": "",
             "source": "manual",
         }
 
-    query = f"{title} {author}".strip()
-    if not query:
-        return {
-            "asin": asin,
-            "isbn": isbn,
-            "series_name": series_name,
-            "series_index": series_index,
-            "source": "manual",
-        }
+    for query in queries:
+        try:
+            matches = audible_search(query, limit=3)
+            if matches:
+                best = matches[0]
+                return {
+                    "asin": asin or str(best.get("asin") or ""),
+                    "isbn": isbn or str(best.get("isbn") or ""),
+                    "series_name": series_name or str(best.get("series_name") or ""),
+                    "series_index": series_index or str(best.get("series_index") or ""),
+                    "cover_url": str(best.get("cover_url") or ""),
+                    "source": "audible" if (best.get("asin") or best.get("cover_url")) else "manual",
+                }
+        except Exception:
+            continue
 
     try:
-        matches = audible_search(query, limit=3)
-        if matches:
-            best = matches[0]
+        gr_matches = goodreads_search(title, author, limit=3)
+        if gr_matches:
+            best = gr_matches[0]
             return {
                 "asin": asin or str(best.get("asin") or ""),
                 "isbn": isbn or str(best.get("isbn") or ""),
                 "series_name": series_name or str(best.get("series_name") or ""),
                 "series_index": series_index or str(best.get("series_index") or ""),
-                "source": "audible" if best.get("asin") else "manual",
+                "cover_url": str(best.get("cover_url") or ""),
+                "source": "goodreads",
+            }
+    except Exception:
+        pass
+
+    try:
+        k_matches = kindle_search(title, author, limit=3)
+        if k_matches:
+            best = k_matches[0]
+            return {
+                "asin": asin or str(best.get("asin") or ""),
+                "isbn": isbn or str(best.get("isbn") or ""),
+                "series_name": series_name or str(best.get("series_name") or ""),
+                "series_index": series_index or str(best.get("series_index") or ""),
+                "cover_url": str(best.get("cover_url") or ""),
+                "source": "kindle",
             }
     except Exception:
         pass
@@ -2104,6 +2773,7 @@ def enrich_with_audible(title: str, author: str, asin: str, isbn: str, series_na
         "isbn": isbn,
         "series_name": series_name,
         "series_index": series_index,
+        "cover_url": "",
         "source": "manual",
     }
 
@@ -2307,9 +2977,12 @@ def dashboard():
                 cur.execute(
                     f"""
                     SELECT COUNT(*) AS c
-                    FROM progress_latest
-                    WHERE target_id IN ({placeholders})
-                      AND episode_id = ''
+                    FROM progress_latest pl
+                    JOIN target_state ts
+                      ON ts.target_id = pl.target_id
+                     AND ts.user_id = pl.user_id
+                    WHERE pl.target_id IN ({placeholders})
+                      AND pl.episode_id = ''
                     """,
                     tuple(effective_target_ids),
                 )
@@ -2317,11 +2990,14 @@ def dashboard():
 
                 cur.execute(
                     f"""
-                    SELECT target_id, user_id, library_item_id, episode_id, progress, is_finished, last_update_ms, source
-                    FROM progress_latest
-                    WHERE target_id IN ({placeholders})
-                      AND episode_id = ''
-                    ORDER BY last_update_ms DESC
+                    SELECT pl.target_id, pl.user_id, pl.library_item_id, pl.episode_id, pl.progress, pl.is_finished, pl.last_update_ms, pl.source
+                    FROM progress_latest pl
+                    JOIN target_state ts
+                      ON ts.target_id = pl.target_id
+                     AND ts.user_id = pl.user_id
+                    WHERE pl.target_id IN ({placeholders})
+                      AND pl.episode_id = ''
+                    ORDER BY pl.last_update_ms DESC
                     LIMIT 20
                     """,
                     tuple(effective_target_ids),
@@ -2340,17 +3016,25 @@ def dashboard():
                       COALESCE(ii.author, '') AS author,
                       COALESCE(ii.series_name, '') AS series_name,
                       COALESCE(ii.published_year, 0) AS published_year,
-                      COALESCE(ii.asin, '') AS asin
+                      COALESCE(ii.asin, '') AS asin,
+                      COALESCE(uc.cover_url, '') AS stored_cover_url
                     FROM progress_latest pl
+                    JOIN target_state ts
+                      ON ts.target_id = pl.target_id
+                     AND ts.user_id = pl.user_id
                     LEFT JOIN item_identity ii
                       ON ii.target_id = pl.target_id
                      AND ii.library_item_id = pl.library_item_id
+                    LEFT JOIN ui_collected_items uc
+                      ON uc.owner_user_id = %s
+                     AND uc.target_id = pl.target_id
+                     AND uc.library_item_id = pl.library_item_id
                     WHERE pl.target_id IN ({placeholders})
                       AND pl.episode_id = ''
                     ORDER BY pl.last_update_ms DESC
                     LIMIT 500
                     """,
-                    tuple(effective_target_ids),
+                    (user_id, *tuple(effective_target_ids)),
                 )
                 for row in cur.fetchall():
                     progress_ratio = float(row.get("progress") or 0.0)
@@ -2359,7 +3043,12 @@ def dashboard():
                     status = "completed" if is_finished else ("in_progress" if progress_ratio > 0 else "not_started")
                     target_id = str(row.get("target_id") or "")
                     library_item_id = str(row.get("library_item_id") or "")
-                    cover_url = url_for("cover_proxy", target_id=target_id, library_item_id=library_item_id) if target_id and library_item_id else ""
+                    stored_cover_url = str(row.get("stored_cover_url") or "").strip()
+                    is_abs_cover = "/api/items/" in stored_cover_url and stored_cover_url.rstrip("/").endswith("/cover")
+                    cover_proxy_url = (
+                        url_for("cover_proxy", target_id=target_id, library_item_id=library_item_id) if target_id and library_item_id else ""
+                    )
+                    cover_url = stored_cover_url if stored_cover_url and not is_abs_cover else cover_proxy_url
                     tracked_books_sync.append(
                         {
                             "target_id": target_id,
@@ -2381,9 +3070,12 @@ def dashboard():
                       SUM(CASE WHEN (COALESCE(progress,0) = 0 AND COALESCE(is_finished,0) = 0) THEN 1 ELSE 0 END) AS backlog_count,
                       SUM(CASE WHEN (COALESCE(progress,0) > 0 AND COALESCE(progress,0) < 0.98 AND COALESCE(is_finished,0) = 0) THEN 1 ELSE 0 END) AS in_progress_count,
                       SUM(CASE WHEN (COALESCE(is_finished,0) = 1 OR COALESCE(progress,0) >= 0.98) THEN 1 ELSE 0 END) AS completed_count
-                    FROM progress_latest
-                    WHERE target_id IN ({placeholders})
-                      AND episode_id = ''
+                    FROM progress_latest pl
+                    JOIN target_state ts
+                      ON ts.target_id = pl.target_id
+                     AND ts.user_id = pl.user_id
+                    WHERE pl.target_id IN ({placeholders})
+                      AND pl.episode_id = ''
                     """,
                     tuple(effective_target_ids),
                 )
@@ -2409,14 +3101,27 @@ def dashboard():
                   c.published_year,
                   c.asin,
                   c.cover_url,
+                  c.source,
                   c.collection_status,
-                  COALESCE(pl.progress, 0) AS progress,
-                  COALESCE(pl.is_finished, 0) AS is_finished
+                  COALESCE((
+                    SELECT pl.progress
+                    FROM progress_latest pl
+                    WHERE pl.target_id = c.target_id
+                      AND pl.library_item_id = c.library_item_id
+                      AND pl.episode_id = ''
+                    ORDER BY pl.last_update_ms DESC
+                    LIMIT 1
+                  ), 0) AS progress,
+                  COALESCE((
+                    SELECT pl.is_finished
+                    FROM progress_latest pl
+                    WHERE pl.target_id = c.target_id
+                      AND pl.library_item_id = c.library_item_id
+                      AND pl.episode_id = ''
+                    ORDER BY pl.last_update_ms DESC
+                    LIMIT 1
+                  ), 0) AS is_finished
                 FROM ui_collected_items c
-                LEFT JOIN progress_latest pl
-                  ON pl.target_id = c.target_id
-                 AND pl.library_item_id = c.library_item_id
-                 AND pl.episode_id = ''
                 WHERE c.owner_user_id = %s
                 ORDER BY updated_at DESC
                 """,
@@ -2427,9 +3132,18 @@ def dashboard():
                 progress_ratio = float(row.get("progress") or 0.0)
                 is_finished = int(row.get("is_finished") or 0) == 1 or progress_ratio >= 0.98
                 listening_status = "completed" if is_finished else ("in_progress" if progress_ratio > 0 else "not_started")
+                target_id = str(row.get("target_id") or "")
+                library_item_id = str(row.get("library_item_id") or "")
+                stored_cover_url = str(row.get("cover_url") or "").strip()
+                is_abs_cover = "/api/items/" in stored_cover_url and stored_cover_url.rstrip("/").endswith("/cover")
+                cover_proxy_url = (
+                    url_for("cover_proxy", target_id=target_id, library_item_id=library_item_id) if target_id and library_item_id else ""
+                )
+                effective_cover_url = stored_cover_url if stored_cover_url and not is_abs_cover else (cover_proxy_url or stored_cover_url)
                 collected_books.append(
                     {
                         **row,
+                        "cover_url": effective_cover_url,
                         "listening_status": listening_status,
                     }
                 )
@@ -2440,7 +3154,7 @@ def dashboard():
 
             cur.execute(
                 """
-                SELECT target_id, library_item_id, title, author, image_url, itunes_id, itunes_page_url, release_date
+                SELECT id, target_id, library_item_id, title, author, feed_url, image_url, itunes_id, itunes_page_url, release_date, source, updated_at
                 FROM ui_podcast_shows
                 WHERE owner_user_id = %s
                 ORDER BY title ASC
@@ -2461,13 +3175,25 @@ def dashboard():
                   pe.episode_title,
                   pe.author,
                   pe.image_url,
-                  COALESCE(pl.progress, 0) AS progress,
-                  COALESCE(pl.is_finished, 0) AS is_finished
+                  COALESCE((
+                    SELECT pl.progress
+                    FROM progress_latest pl
+                    WHERE pl.target_id = pe.target_id
+                      AND pl.library_item_id = pe.library_item_id
+                      AND pl.episode_id = COALESCE(pe.abs_episode_id, pe.episode_id)
+                    ORDER BY pl.last_update_ms DESC
+                    LIMIT 1
+                  ), 0) AS progress,
+                  COALESCE((
+                    SELECT pl.is_finished
+                    FROM progress_latest pl
+                    WHERE pl.target_id = pe.target_id
+                      AND pl.library_item_id = pe.library_item_id
+                      AND pl.episode_id = COALESCE(pe.abs_episode_id, pe.episode_id)
+                    ORDER BY pl.last_update_ms DESC
+                    LIMIT 1
+                  ), 0) AS is_finished
                 FROM ui_podcast_episodes pe
-                LEFT JOIN progress_latest pl
-                  ON pl.target_id = pe.target_id
-                 AND pl.library_item_id = pe.library_item_id
-                 AND pl.episode_id = COALESCE(pe.abs_episode_id, pe.episode_id)
                 WHERE pe.owner_user_id = %s
                 ORDER BY pe.updated_at DESC
                 LIMIT 10
@@ -2512,13 +3238,25 @@ def dashboard():
                   pe.abs_presence,
                   pe.episode_title,
                   pe.published_at,
-                  COALESCE(pl.progress, 0) AS progress,
-                  COALESCE(pl.is_finished, 0) AS is_finished
+                  COALESCE((
+                    SELECT pl.progress
+                    FROM progress_latest pl
+                    WHERE pl.target_id = pe.target_id
+                      AND pl.library_item_id = pe.library_item_id
+                      AND pl.episode_id = COALESCE(pe.abs_episode_id, pe.episode_id)
+                    ORDER BY pl.last_update_ms DESC
+                    LIMIT 1
+                  ), 0) AS progress,
+                  COALESCE((
+                    SELECT pl.is_finished
+                    FROM progress_latest pl
+                    WHERE pl.target_id = pe.target_id
+                      AND pl.library_item_id = pe.library_item_id
+                      AND pl.episode_id = COALESCE(pe.abs_episode_id, pe.episode_id)
+                    ORDER BY pl.last_update_ms DESC
+                    LIMIT 1
+                  ), 0) AS is_finished
                 FROM ui_podcast_episodes pe
-                LEFT JOIN progress_latest pl
-                  ON pl.target_id = pe.target_id
-                 AND pl.library_item_id = pe.library_item_id
-                 AND pl.episode_id = COALESCE(pe.abs_episode_id, pe.episode_id)
                 WHERE pe.owner_user_id = %s
                 ORDER BY pe.target_id, pe.library_item_id, pe.published_at, pe.episode_title
                 """,
@@ -2559,7 +3297,49 @@ def dashboard():
                     }
                 )
 
-            home_continue = [b for b in tracked_books_sync if b.get("status") == "in_progress"][:10]
+            def dedupe_home_books(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+                groups: list[dict[str, Any]] = []
+                for idx, b in enumerate(items):
+                    asin_norm = re.sub(r"[^A-Za-z0-9]", "", str(b.get("asin") or "").upper())
+                    title_norm = re.sub(r"\s+", " ", str(b.get("title") or "").strip().casefold())
+                    author_norm = re.sub(r"\s+", " ", str(b.get("author") or "").strip().casefold())
+                    title_author_key = f"{title_norm}|{author_norm}" if (title_norm or author_norm) else ""
+
+                    match_idx = -1
+                    for g_idx, group in enumerate(groups):
+                        asin_keys = group.get("asin_keys", set())
+                        title_author_keys = group.get("title_author_keys", set())
+                        if asin_norm and asin_norm in asin_keys:
+                            match_idx = g_idx
+                            break
+                        if title_author_key and title_author_key in title_author_keys:
+                            match_idx = g_idx
+                            break
+
+                    if match_idx == -1:
+                        groups.append(
+                            {
+                                "item": b,
+                                "first_idx": idx,
+                                "asin_keys": {asin_norm} if asin_norm else set(),
+                                "title_author_keys": {title_author_key} if title_author_key else set(),
+                            }
+                        )
+                        continue
+
+                    group = groups[match_idx]
+                    if asin_norm:
+                        group["asin_keys"].add(asin_norm)
+                    if title_author_key:
+                        group["title_author_keys"].add(title_author_key)
+                    existing = group["item"]
+                    if float(b.get("progress_pct") or 0.0) > float(existing.get("progress_pct") or 0.0):
+                        group["item"] = b
+
+                return [g["item"] for g in sorted(groups, key=lambda g: g.get("first_idx", 0))]
+
+            home_continue_candidates = [b for b in tracked_books_sync if b.get("status") == "in_progress"]
+            home_continue = dedupe_home_books(home_continue_candidates)[:10]
             series_groups: dict[str, list[dict[str, Any]]] = {}
             for b in collected_books_sorted:
                 series_name = str(b.get("series_name") or "").strip()
@@ -2637,7 +3417,7 @@ def dashboard():
             home_next_podcast_episodes.sort(key=lambda ep: (str(ep.get("podcast_title") or "").casefold(), podcast_episode_sort_key(str(ep.get("episode_title") or ""), str(ep.get("published_at") or ""))))
             home_next_podcast_episodes = home_next_podcast_episodes[:10]
 
-            home_completed = [b for b in tracked_books_sync if b.get("status") == "completed"][:10]
+            home_completed = dedupe_home_books([b for b in tracked_books_sync if b.get("status") == "completed"])[:10]
             home_collected = collected_books[:10]
             home_podcasts = podcast_cards[:10]
 
@@ -2726,14 +3506,17 @@ def podcast_detail(target_id: str, library_item_id: str):
         progress_pct = max(0.0, min(100.0, progress_ratio * 100.0))
         is_finished = int(row.get("is_finished") or 0) == 1 or progress_ratio >= 0.98
         status = "completed" if is_finished else ("in_progress" if progress_ratio > 0 else "not_started")
+        episode_title = str(row.get("episode_title") or "")
+        episode_no = parse_episode_number(episode_title)
         episodes.append(
             {
                 "episode_id": row.get("episode_id") or "",
                 "abs_episode_id": row.get("abs_episode_id") or "",
                 "abs_presence": row.get("abs_presence") or "missing",
-                "episode_title": row.get("episode_title") or "",
+                "episode_title": episode_title,
+                "episode_display_title": strip_episode_number_prefix(episode_title) if episode_no is not None else episode_title,
                 "published_at": row.get("published_at") or "",
-                "episode_no": parse_episode_number(str(row.get("episode_title") or "")),
+                "episode_no": episode_no,
                 "progress_pct": round(progress_pct, 1),
                 "status": status,
             }
@@ -2891,6 +3674,14 @@ def sync_settings():
                     (edit_account_id, user_id),
                 )
                 edit_account = cur.fetchone()
+    now_ts = int(time.time())
+    reset_pending = (
+        int(session.get("reset_library_user_id") or 0) == user_id
+        and int(session.get("reset_library_pending_until") or 0) >= now_ts
+    )
+    if not reset_pending:
+        session.pop("reset_library_user_id", None)
+        session.pop("reset_library_pending_until", None)
 
     return render_template(
         "sync.html",
@@ -2898,7 +3689,103 @@ def sync_settings():
         settings=settings_row,
         accounts=accounts,
         edit_account=edit_account,
+        reset_pending=reset_pending,
     )
+
+
+def reset_user_library_data(owner_user_id: int) -> dict[str, int]:
+    stats = {
+        "tracked_books": 0,
+        "collected_books": 0,
+        "podcast_shows": 0,
+        "podcast_episodes": 0,
+        "item_identity": 0,
+        "progress_latest": 0,
+        "progress_history": 0,
+        "progress_outbox": 0,
+        "target_state": 0,
+    }
+    target_ids: list[str] = []
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT id, target_id
+                FROM ui_sync_accounts
+                WHERE owner_user_id = %s
+                """,
+                (owner_user_id,),
+            )
+            for row in cur.fetchall():
+                tid = (row.get("target_id") or f"u{owner_user_id}-a{row['id']}").strip()
+                if tid:
+                    target_ids.append(tid)
+            target_ids = list(dict.fromkeys(target_ids))
+
+            cur.execute("DELETE FROM ui_tracked_books WHERE owner_user_id = %s", (owner_user_id,))
+            stats["tracked_books"] = int(cur.rowcount or 0)
+            cur.execute("DELETE FROM ui_collected_items WHERE owner_user_id = %s", (owner_user_id,))
+            stats["collected_books"] = int(cur.rowcount or 0)
+            cur.execute("DELETE FROM ui_podcast_episodes WHERE owner_user_id = %s", (owner_user_id,))
+            stats["podcast_episodes"] = int(cur.rowcount or 0)
+            cur.execute("DELETE FROM ui_podcast_shows WHERE owner_user_id = %s", (owner_user_id,))
+            stats["podcast_shows"] = int(cur.rowcount or 0)
+
+            if target_ids:
+                placeholders = ",".join(["%s"] * len(target_ids))
+                cur.execute(f"DELETE FROM item_identity WHERE target_id IN ({placeholders})", tuple(target_ids))
+                stats["item_identity"] = int(cur.rowcount or 0)
+                cur.execute(f"DELETE FROM progress_latest WHERE target_id IN ({placeholders})", tuple(target_ids))
+                stats["progress_latest"] = int(cur.rowcount or 0)
+                cur.execute(f"DELETE FROM progress_history WHERE target_id IN ({placeholders})", tuple(target_ids))
+                stats["progress_history"] = int(cur.rowcount or 0)
+                cur.execute(f"DELETE FROM progress_outbox WHERE target_id IN ({placeholders})", tuple(target_ids))
+                stats["progress_outbox"] = int(cur.rowcount or 0)
+                cur.execute(f"DELETE FROM target_state WHERE target_id IN ({placeholders})", tuple(target_ids))
+                stats["target_state"] = int(cur.rowcount or 0)
+    return stats
+
+
+@app.route("/sync/reset-library", methods=["POST"])
+@login_required
+def sync_reset_library():
+    user_id = int(session["user_id"])
+    step = (request.form.get("step") or "1").strip()
+    now_ts = int(time.time())
+
+    if step != "2":
+        session["reset_library_user_id"] = user_id
+        session["reset_library_pending_until"] = now_ts + 900
+        flash("First confirmation stored. Please confirm reset a second time by typing RESET.", "error")
+        return redirect(url_for("sync_settings"))
+
+    pending_user_id = int(session.get("reset_library_user_id") or 0)
+    pending_until = int(session.get("reset_library_pending_until") or 0)
+    if pending_user_id != user_id or pending_until < now_ts:
+        session.pop("reset_library_user_id", None)
+        session.pop("reset_library_pending_until", None)
+        flash("Reset confirmation expired. Please start again.", "error")
+        return redirect(url_for("sync_settings"))
+
+    confirm_text = (request.form.get("confirm_text") or "").strip()
+    if confirm_text != "RESET":
+        flash("Second confirmation failed. Please type RESET exactly.", "error")
+        return redirect(url_for("sync_settings"))
+
+    stats = reset_user_library_data(user_id)
+    session.pop("reset_library_user_id", None)
+    session.pop("reset_library_pending_until", None)
+    flash(
+        (
+            "Library reset completed: "
+            f"{stats.get('collected_books', 0)} audiobooks, "
+            f"{stats.get('podcast_shows', 0)} podcasts, "
+            f"{stats.get('podcast_episodes', 0)} podcast episodes, "
+            f"{stats.get('tracked_books', 0)} tracked books removed."
+        ),
+        "ok",
+    )
+    return redirect(url_for("sync_settings"))
 
 
 @app.route("/sync/run-now", methods=["POST"])
@@ -2913,7 +3800,13 @@ def sync_run_now():
 @login_required
 def sync_import_collected():
     user_id = int(session["user_id"])
-    stats = import_abs_catalog(user_id, import_books=True, import_podcasts=False, enrich_podcasts=False)
+    stats = import_abs_catalog(
+        user_id,
+        import_books=True,
+        import_podcasts=False,
+        enrich_podcasts=False,
+        prefer_book_metadata=True,
+    )
     flash(f"Collected import finished: {stats.get('books', 0)} audiobooks imported/updated.", "ok")
     return redirect(url_for("dashboard"))
 
@@ -2942,13 +3835,18 @@ def sync_rebuild_progress():
     return redirect(url_for("sync_settings"))
 
 
-@app.route("/sync/cleanup-collected", methods=["POST"])
+@app.route("/sync/sync-book-metadata", methods=["POST"])
 @login_required
-def sync_cleanup_collected():
+def sync_book_metadata():
     user_id = int(session["user_id"])
-    stats = cleanup_collected_library(user_id)
+    only_missing_cover = (request.form.get("mode") or "missing_cover").strip() != "all"
+    stats = sync_book_metadata_from_providers(user_id, only_missing_cover=only_missing_cover)
     flash(
-        f"Collected cleanup finished: {stats.get('marked_missing', 0)} marked missing, {stats.get('merged_duplicates', 0)} duplicates merged, {stats.get('after', 0)} total.",
+        (
+            f"Metadata sync finished: checked {stats.get('checked', 0)}, "
+            f"updated {stats.get('updated', 0)}, "
+            f"no match {stats.get('no_match', 0)}."
+        ),
         "ok",
     )
     return redirect(url_for("sync_settings"))
@@ -2993,17 +3891,175 @@ def cover_proxy(target_id: str, library_item_id: str):
     if not target:
         return ("", 404)
 
+    abs_status = 502
     try:
         resp = requests.get(
             f"{target['url']}/api/items/{library_item_id}/cover",
             headers={"Authorization": f"Bearer {target['token']}"},
             timeout=10,
         )
-        if resp.status_code != 200:
-            return ("", resp.status_code)
-        return Response(resp.content, mimetype=resp.headers.get("Content-Type", "image/jpeg"))
+        abs_status = int(resp.status_code)
+        if abs_status == 200:
+            return Response(resp.content, mimetype=resp.headers.get("Content-Type", "image/jpeg"))
     except Exception:
-        return ("", 502)
+        abs_status = 502
+
+    def fetch_external_cover(url: str) -> Response | None:
+        candidate = (url or "").strip()
+        if not candidate:
+            return None
+        if "/api/items/" in candidate and candidate.rstrip("/").endswith("/cover"):
+            return None
+        if "/cover/" in candidate:
+            return None
+        try:
+            r = requests.get(candidate, timeout=10, headers={"User-Agent": "abs-tracked/1.0"})
+            if int(r.status_code) != 200 or not r.content:
+                return None
+            return Response(r.content, mimetype=r.headers.get("Content-Type", "image/jpeg"))
+        except Exception:
+            return None
+
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            def try_row_cover(row: dict[str, Any]) -> Response | None:
+                if not row:
+                    return None
+
+                fallback_resp = fetch_external_cover(str(row.get("cover_url") or ""))
+                if fallback_resp is not None:
+                    return fallback_resp
+
+                try:
+                    enriched = enrich_with_audible(
+                        str(row.get("title") or ""),
+                        str(row.get("author") or ""),
+                        str(row.get("asin") or ""),
+                        str(row.get("isbn") or ""),
+                        str(row.get("series_name") or ""),
+                        "",
+                    )
+                except Exception:
+                    enriched = {}
+
+                enriched_cover = str(enriched.get("cover_url") or "").strip()
+                fallback_resp = fetch_external_cover(enriched_cover)
+                if fallback_resp is None:
+                    return None
+
+                enriched_source = str(enriched.get("source") or "").strip().lower()
+                new_source = str(row.get("source") or "abs")
+                if enriched_source in ("audible", "goodreads", "kindle"):
+                    new_source = enriched_source
+                cur.execute(
+                    """
+                    UPDATE ui_collected_items
+                    SET
+                      asin = COALESCE(NULLIF(%s,''), asin),
+                      isbn = COALESCE(NULLIF(%s,''), isbn),
+                      series_name = COALESCE(NULLIF(%s,''), series_name),
+                      cover_url = %s,
+                      source = %s,
+                      updated_at = CURRENT_TIMESTAMP
+                    WHERE id = %s
+                    """,
+                    (
+                        str(enriched.get("asin") or ""),
+                        str(enriched.get("isbn") or ""),
+                        str(enriched.get("series_name") or ""),
+                        enriched_cover,
+                        new_source,
+                        int(row["id"]),
+                    ),
+                )
+                return fallback_resp
+
+            cur.execute(
+                """
+                SELECT id, title, author, asin, isbn, series_name, cover_url, source
+                FROM ui_collected_items
+                WHERE owner_user_id = %s
+                  AND target_id = %s
+                  AND library_item_id = %s
+                LIMIT 1
+                """,
+                (user_id, target_id, library_item_id),
+            )
+            row = cur.fetchone() or {}
+            fallback_resp = try_row_cover(row)
+            if fallback_resp is not None:
+                return fallback_resp
+
+            asin = str(row.get("asin") or "").strip()
+            title = str(row.get("title") or "").strip()
+            author = str(row.get("author") or "").strip()
+            if not (asin or title):
+                cur.execute(
+                    """
+                    SELECT title, author, asin, isbn, series_name
+                    FROM item_identity
+                    WHERE target_id = %s
+                      AND library_item_id = %s
+                    LIMIT 1
+                    """,
+                    (target_id, library_item_id),
+                )
+                identity = cur.fetchone() or {}
+                if identity:
+                    row = {**row, **identity}
+                else:
+                    cur.execute(
+                        """
+                    SELECT id, title, author, asin, isbn, series_name, cover_url, source
+                    FROM ui_collected_items
+                    WHERE owner_user_id = %s
+                      AND target_id = %s
+                      AND library_item_id = %s
+                    LIMIT 1
+                    """,
+                        (user_id, target_id, library_item_id),
+                    )
+                    row = cur.fetchone() or row
+                asin = str(row.get("asin") or "").strip()
+                title = str(row.get("title") or "").strip()
+                author = str(row.get("author") or "").strip()
+
+            if asin:
+                cur.execute(
+                    """
+                    SELECT id, title, author, asin, isbn, series_name, cover_url, source
+                    FROM ui_collected_items
+                    WHERE owner_user_id = %s
+                      AND asin = %s
+                    ORDER BY (cover_url <> '') DESC, updated_at DESC
+                    LIMIT 1
+                    """,
+                    (user_id, asin),
+                )
+                similar = cur.fetchone() or {}
+                fallback_resp = try_row_cover(similar)
+                if fallback_resp is not None:
+                    return fallback_resp
+
+            if title:
+                cur.execute(
+                    """
+                    SELECT id, title, author, asin, isbn, series_name, cover_url, source
+                    FROM ui_collected_items
+                    WHERE owner_user_id = %s
+                      AND LOWER(title) = LOWER(%s)
+                      AND LOWER(COALESCE(author, '')) = LOWER(%s)
+                    ORDER BY (cover_url <> '') DESC, updated_at DESC
+                    LIMIT 1
+                    """,
+                    (user_id, title, author),
+                )
+                similar = cur.fetchone() or {}
+                fallback_resp = try_row_cover(similar)
+                if fallback_resp is not None:
+                    return fallback_resp
+
+    return ("", abs_status)
 
 
 @app.route("/abs/open/<target_id>/<library_item_id>")
@@ -3161,6 +4217,350 @@ def mark_heard():
             )
     flash("Marked as heard.", "ok")
     return redirect(url_for("dashboard"))
+
+
+@app.route("/podcasts/<target_id>/<library_item_id>/mark-previous-heard", methods=["POST"])
+@login_required
+def mark_previous_podcast_episodes_heard(target_id: str, library_item_id: str):
+    owner_user_id = int(session["user_id"])
+    until_episode_no = parse_int(request.form.get("until_episode_no"), 0)
+    if until_episode_no <= 0:
+        flash(t("message.mark_prev_heard_invalid"), "error")
+        return redirect(url_for("podcast_detail", target_id=target_id, library_item_id=library_item_id))
+
+    now_ms = int(time.time() * 1000)
+    abs_by_no, abs_by_title = load_abs_episode_lookup(owner_user_id, target_id, library_item_id)
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT server_id, principal_id, user_id
+                FROM target_state
+                WHERE target_id = %s
+                LIMIT 1
+                """,
+                (target_id,),
+            )
+            target_state = cur.fetchone() or {}
+
+            cur.execute(
+                """
+                SELECT id, abs_username, target_id, server_id, principal_id
+                FROM ui_sync_accounts
+                WHERE owner_user_id = %s
+                ORDER BY id
+                """,
+                (owner_user_id,),
+            )
+            account_rows = cur.fetchall()
+            account_match = None
+            for row in account_rows:
+                resolved = (row.get("target_id") or f"u{owner_user_id}-a{row['id']}").strip()
+                if resolved == target_id:
+                    account_match = row
+                    break
+
+            server_id = (
+                str(target_state.get("server_id") or "")
+                or str((account_match or {}).get("server_id") or "")
+                or target_id
+            )
+            principal_id = (
+                str(target_state.get("principal_id") or "")
+                or str((account_match or {}).get("principal_id") or "")
+                or target_id
+            )
+            user_id = (
+                str(target_state.get("user_id") or "")
+                or str((account_match or {}).get("abs_username") or "")
+                or f"ui-{owner_user_id}"
+            )
+
+            cur.execute(
+                """
+                SELECT episode_id, abs_episode_id, episode_title, duration_sec
+                FROM ui_podcast_episodes
+                WHERE owner_user_id = %s
+                  AND target_id = %s
+                  AND library_item_id = %s
+                """,
+                (owner_user_id, target_id, library_item_id),
+            )
+            rows = cur.fetchall()
+
+            selected: list[dict[str, Any]] = []
+            for row in rows:
+                episode_title = str(row.get("episode_title") or "")
+                episode_no = parse_episode_number(episode_title)
+                if episode_no is None or episode_no > until_episode_no:
+                    continue
+                title_key = normalize_text_key(episode_title)
+                episode_id = str(row.get("abs_episode_id") or "").strip()
+                if not episode_id and episode_no in abs_by_no:
+                    episode_id = str(abs_by_no.get(episode_no) or "").strip()
+                if not episode_id and title_key in abs_by_title:
+                    episode_id = str(abs_by_title.get(title_key) or "").strip()
+                if not episode_id:
+                    continue
+                if episode_id != str(row.get("abs_episode_id") or "").strip():
+                    cur.execute(
+                        """
+                        UPDATE ui_podcast_episodes
+                        SET abs_episode_id=%s, abs_presence='present', updated_at=CURRENT_TIMESTAMP
+                        WHERE owner_user_id=%s AND target_id=%s AND library_item_id=%s AND episode_id=%s
+                        """,
+                        (episode_id, owner_user_id, target_id, library_item_id, str(row.get("episode_id") or "")),
+                    )
+                duration = float(row.get("duration_sec") or 0.0)
+                selected.append({"episode_id": episode_id, "duration": duration})
+
+            if not selected:
+                flash(t("message.mark_prev_heard_none"), "error")
+                return redirect(url_for("podcast_detail", target_id=target_id, library_item_id=library_item_id))
+
+            for idx, episode in enumerate(selected):
+                ts = now_ms + idx
+                episode_id = str(episode.get("episode_id") or "")
+                duration = float(episode.get("duration") or 0.0)
+                current_time = duration if duration > 0 else 0.0
+                media_progress_id = f"ui-podcast-local-{ts}"
+
+                cur.execute(
+                    """
+                    INSERT INTO progress_outbox
+                    (target_id, server_id, principal_id, user_id, library_item_id, episode_id, canonical_key, progress, current_time_sec, duration, is_finished, last_update_ms, status)
+                    VALUES (%s,%s,%s,%s,%s,%s,NULL,1,%s,%s,1,%s,'pending')
+                    """,
+                    (target_id, server_id, principal_id, user_id, library_item_id, episode_id, current_time, duration, ts),
+                )
+                cur.execute(
+                    """
+                    INSERT INTO progress_latest
+                    (target_id, server_id, principal_id, user_id, library_item_id, episode_id, media_progress_id, canonical_key, progress, current_time_sec, duration, is_finished, started_at_ms, finished_at_ms, last_update_ms, source)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,NULL,1,%s,%s,1,NULL,%s,%s,'local_push')
+                    ON DUPLICATE KEY UPDATE
+                      server_id = VALUES(server_id),
+                      principal_id = VALUES(principal_id),
+                      media_progress_id = VALUES(media_progress_id),
+                      progress = VALUES(progress),
+                      current_time_sec = VALUES(current_time_sec),
+                      duration = VALUES(duration),
+                      is_finished = VALUES(is_finished),
+                      finished_at_ms = VALUES(finished_at_ms),
+                      last_update_ms = VALUES(last_update_ms),
+                      source = VALUES(source)
+                    """,
+                    (
+                        target_id,
+                        server_id,
+                        principal_id,
+                        user_id,
+                        library_item_id,
+                        episode_id,
+                        media_progress_id,
+                        current_time,
+                        duration,
+                        ts,
+                        ts,
+                    ),
+                )
+                cur.execute(
+                    """
+                    INSERT INTO progress_history
+                    (target_id, server_id, principal_id, user_id, library_item_id, episode_id, media_progress_id, canonical_key, progress, current_time_sec, duration, is_finished, started_at_ms, finished_at_ms, last_update_ms, source)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,NULL,1,%s,%s,1,NULL,%s,%s,'local_push')
+                    """,
+                    (
+                        target_id,
+                        server_id,
+                        principal_id,
+                        user_id,
+                        library_item_id,
+                        episode_id,
+                        media_progress_id,
+                        current_time,
+                        duration,
+                        ts,
+                        ts,
+                    ),
+                )
+
+    request_manual_sync()
+    flash(
+        t("message.mark_prev_heard_done") % {"count": len(selected), "episode": until_episode_no},
+        "ok",
+    )
+    return redirect(url_for("podcast_detail", target_id=target_id, library_item_id=library_item_id))
+
+
+@app.route("/podcasts/<target_id>/<library_item_id>/mark-range-unheard", methods=["POST"])
+@login_required
+def mark_podcast_episode_range_unheard(target_id: str, library_item_id: str):
+    owner_user_id = int(session["user_id"])
+    from_episode_no = parse_int(request.form.get("from_episode_no"), 0)
+    to_episode_no = parse_int(request.form.get("to_episode_no"), 0)
+    if from_episode_no <= 0 or to_episode_no <= 0 or from_episode_no > to_episode_no:
+        flash(t("message.mark_range_unheard_invalid"), "error")
+        return redirect(url_for("podcast_detail", target_id=target_id, library_item_id=library_item_id))
+
+    now_ms = int(time.time() * 1000)
+    abs_by_no, abs_by_title = load_abs_episode_lookup(owner_user_id, target_id, library_item_id)
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT server_id, principal_id, user_id
+                FROM target_state
+                WHERE target_id = %s
+                LIMIT 1
+                """,
+                (target_id,),
+            )
+            target_state = cur.fetchone() or {}
+
+            cur.execute(
+                """
+                SELECT id, abs_username, target_id, server_id, principal_id
+                FROM ui_sync_accounts
+                WHERE owner_user_id = %s
+                ORDER BY id
+                """,
+                (owner_user_id,),
+            )
+            account_rows = cur.fetchall()
+            account_match = None
+            for row in account_rows:
+                resolved = (row.get("target_id") or f"u{owner_user_id}-a{row['id']}").strip()
+                if resolved == target_id:
+                    account_match = row
+                    break
+
+            server_id = (
+                str(target_state.get("server_id") or "")
+                or str((account_match or {}).get("server_id") or "")
+                or target_id
+            )
+            principal_id = (
+                str(target_state.get("principal_id") or "")
+                or str((account_match or {}).get("principal_id") or "")
+                or target_id
+            )
+            user_id = (
+                str(target_state.get("user_id") or "")
+                or str((account_match or {}).get("abs_username") or "")
+                or f"ui-{owner_user_id}"
+            )
+
+            cur.execute(
+                """
+                SELECT episode_id, abs_episode_id, episode_title, duration_sec
+                FROM ui_podcast_episodes
+                WHERE owner_user_id = %s
+                  AND target_id = %s
+                  AND library_item_id = %s
+                """,
+                (owner_user_id, target_id, library_item_id),
+            )
+            rows = cur.fetchall()
+
+            selected: list[dict[str, Any]] = []
+            for row in rows:
+                episode_title = str(row.get("episode_title") or "")
+                episode_no = parse_episode_number(episode_title)
+                if episode_no is None or episode_no < from_episode_no or episode_no > to_episode_no:
+                    continue
+                title_key = normalize_text_key(episode_title)
+                episode_id = str(row.get("abs_episode_id") or "").strip()
+                if not episode_id and episode_no in abs_by_no:
+                    episode_id = str(abs_by_no.get(episode_no) or "").strip()
+                if not episode_id and title_key in abs_by_title:
+                    episode_id = str(abs_by_title.get(title_key) or "").strip()
+                if not episode_id:
+                    continue
+                if episode_id != str(row.get("abs_episode_id") or "").strip():
+                    cur.execute(
+                        """
+                        UPDATE ui_podcast_episodes
+                        SET abs_episode_id=%s, abs_presence='present', updated_at=CURRENT_TIMESTAMP
+                        WHERE owner_user_id=%s AND target_id=%s AND library_item_id=%s AND episode_id=%s
+                        """,
+                        (episode_id, owner_user_id, target_id, library_item_id, str(row.get("episode_id") or "")),
+                    )
+                duration = float(row.get("duration_sec") or 0.0)
+                selected.append({"episode_id": episode_id, "duration": duration})
+
+            if not selected:
+                flash(t("message.mark_range_unheard_none"), "error")
+                return redirect(url_for("podcast_detail", target_id=target_id, library_item_id=library_item_id))
+
+            for idx, episode in enumerate(selected):
+                ts = now_ms + idx
+                episode_id = str(episode.get("episode_id") or "")
+                duration = float(episode.get("duration") or 0.0)
+                media_progress_id = f"ui-podcast-local-unheard-{ts}"
+
+                cur.execute(
+                    """
+                    INSERT INTO progress_outbox
+                    (target_id, server_id, principal_id, user_id, library_item_id, episode_id, canonical_key, progress, current_time_sec, duration, is_finished, last_update_ms, status)
+                    VALUES (%s,%s,%s,%s,%s,%s,NULL,0,0,%s,0,%s,'pending')
+                    """,
+                    (target_id, server_id, principal_id, user_id, library_item_id, episode_id, duration, ts),
+                )
+                cur.execute(
+                    """
+                    INSERT INTO progress_latest
+                    (target_id, server_id, principal_id, user_id, library_item_id, episode_id, media_progress_id, canonical_key, progress, current_time_sec, duration, is_finished, started_at_ms, finished_at_ms, last_update_ms, source)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,NULL,0,0,%s,0,NULL,NULL,%s,'local_push')
+                    ON DUPLICATE KEY UPDATE
+                      server_id = VALUES(server_id),
+                      principal_id = VALUES(principal_id),
+                      media_progress_id = VALUES(media_progress_id),
+                      progress = VALUES(progress),
+                      current_time_sec = VALUES(current_time_sec),
+                      duration = VALUES(duration),
+                      is_finished = VALUES(is_finished),
+                      finished_at_ms = VALUES(finished_at_ms),
+                      last_update_ms = VALUES(last_update_ms),
+                      source = VALUES(source)
+                    """,
+                    (
+                        target_id,
+                        server_id,
+                        principal_id,
+                        user_id,
+                        library_item_id,
+                        episode_id,
+                        media_progress_id,
+                        duration,
+                        ts,
+                    ),
+                )
+                cur.execute(
+                    """
+                    INSERT INTO progress_history
+                    (target_id, server_id, principal_id, user_id, library_item_id, episode_id, media_progress_id, canonical_key, progress, current_time_sec, duration, is_finished, started_at_ms, finished_at_ms, last_update_ms, source)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,NULL,0,0,%s,0,NULL,NULL,%s,'local_push')
+                    """,
+                    (
+                        target_id,
+                        server_id,
+                        principal_id,
+                        user_id,
+                        library_item_id,
+                        episode_id,
+                        media_progress_id,
+                        duration,
+                        ts,
+                    ),
+                )
+
+    request_manual_sync()
+    flash(
+        t("message.mark_range_unheard_done") % {"count": len(selected), "from": from_episode_no, "to": to_episode_no},
+        "ok",
+    )
+    return redirect(url_for("podcast_detail", target_id=target_id, library_item_id=library_item_id))
 
 
 @app.route("/books/mark-synced-heard", methods=["POST"])

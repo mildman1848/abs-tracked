@@ -1,11 +1,11 @@
 ---
 services:
-  abshelflife:
-    image: ${IMAGE_NAME:-abshelflife}
+  abs-tracked:
+    image: ${IMAGE_NAME:-abs-tracked}
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ${CONTAINER_NAME:-abshelflife}
+    container_name: ${CONTAINER_NAME:-abs-tracked}
     environment:
       - PUID=${PUID:-1000}
       - PGID=${PGID:-1000}
@@ -18,20 +18,21 @@ services:
       - ABS_ENABLE_LOCAL_PRECEDENCE=${ABS_ENABLE_LOCAL_PRECEDENCE:-0}
       - ABS_LOCAL_PUSH_THRESHOLD_MS=${ABS_LOCAL_PUSH_THRESHOLD_MS:-30000}
       - ABS_ENABLE_CROSS_SERVER_MARK_SYNC=${ABS_ENABLE_CROSS_SERVER_MARK_SYNC:-1}
+      - ABS_CROSS_TARGET_REQUIRE_PRINCIPAL_MATCH=${ABS_CROSS_TARGET_REQUIRE_PRINCIPAL_MATCH:-1}
       - ABS_MATCH_PRIORITY=${ABS_MATCH_PRIORITY:-asin,isbn,title_author_duration}
       - ABS_ENABLE_LIBRARY_INDEX=${ABS_ENABLE_LIBRARY_INDEX:-1}
       - ABS_LIBRARY_INDEX_INTERVAL_SECONDS=${ABS_LIBRARY_INDEX_INTERVAL_SECONDS:-21600}
       - ABS_LIBRARY_INDEX_PAGE_SIZE=${ABS_LIBRARY_INDEX_PAGE_SIZE:-200}
-      - ABS_DB_NAME=${ABS_DB_NAME:-abshelflife}
-      - ABS_DB_USER=${ABS_DB_USER:-abshelflife}
+      - ABS_DB_NAME=${ABS_DB_NAME:-abs_tracked}
+      - ABS_DB_USER=${ABS_DB_USER:-abs_tracked}
       - FILE__ABS_DB_PASSWORD=${FILE__ABS_DB_PASSWORD:-/run/secrets/abs_db_password}
       - FILE__MYSQL_ROOT_PASSWORD=${FILE__MYSQL_ROOT_PASSWORD:-/run/secrets/mysql_root_password}
       - BACKUP_DIR=/config/backups
       - BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-14}
       - DB_HOST=127.0.0.1
       - DB_PORT=3306
-      - DB_NAME=${ABS_DB_NAME:-abshelflife}
-      - DB_USER=${ABS_DB_USER:-abshelflife}
+      - DB_NAME=${ABS_DB_NAME:-abs_tracked}
+      - DB_USER=${ABS_DB_USER:-abs_tracked}
       - FILE__DB_PASSWORD=${FILE__DB_PASSWORD:-/run/secrets/abs_db_password}
       - TARGETS_FILE=${ABS_TARGETS_FILE:-/config/app/targets.json}
       - MANUAL_SYNC_TRIGGER_FILE=${ABS_SYNC_TRIGGER_FILE:-/config/app/run-now.trigger}

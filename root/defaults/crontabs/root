@@ -1,1 +1,1 @@
-0 3 * * * /usr/local/bin/abshelflife-backup >>/config/log/backup.log 2>&1
+0 3 * * * /usr/local/bin/abs-tracked-backup >>/config/log/backup.log 2>&1

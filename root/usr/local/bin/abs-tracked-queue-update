@@ -2,8 +2,8 @@
 # shellcheck shell=bash
 set -euo pipefail
 
-ABS_DB_NAME="${ABS_DB_NAME:-abshelflife}"
-ABS_DB_USER="${ABS_DB_USER:-abshelflife}"
+ABS_DB_NAME="${ABS_DB_NAME:-abs_tracked}"
+ABS_DB_USER="${ABS_DB_USER:-abs_tracked}"
 ABS_DB_PASSWORD="${ABS_DB_PASSWORD:-}"
 DB_HOST="${ABS_DB_HOST:-127.0.0.1}"
 DB_PORT="${ABS_DB_PORT:-3306}"

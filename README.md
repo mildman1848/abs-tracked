@@ -1,16 +1,16 @@
-# ABShelfLife - LinuxServer.io Style Edition
+# abs-tracked - LinuxServer.io Style Edition
 
 > 🇩🇪 **[German Version](README.DE.md)** | 📖 **English Version**
 
-[![GitHub Tag](https://img.shields.io/github/v/tag/mildman1848/ABShelfLife?style=for-the-badge&logo=github&color=005AA4)](https://github.com/mildman1848/ABShelfLife/tags)
-[![Docker Hub Pulls](https://img.shields.io/docker/pulls/mildman1848/abshelflife?style=for-the-badge&logo=docker&logoColor=fff&color=005AA4)](https://hub.docker.com/r/mildman1848/abshelflife)
-[![Docker Image Size](https://img.shields.io/docker/image-size/mildman1848/abshelflife/latest?style=for-the-badge&logo=docker&logoColor=fff&color=005AA4)](https://hub.docker.com/r/mildman1848/abshelflife)
-[![License](https://img.shields.io/github/license/mildman1848/ABShelfLife?style=for-the-badge&color=005AA4)](https://github.com/mildman1848/ABShelfLife/blob/main/LICENSE)
+[![GitHub Tag](https://img.shields.io/github/v/tag/mildman1848/abs-tracked?style=for-the-badge&logo=github&color=005AA4)](https://github.com/mildman1848/abs-tracked/tags)
+[![Docker Hub Pulls](https://img.shields.io/docker/pulls/mildman1848/abs-tracked?style=for-the-badge&logo=docker&logoColor=fff&color=005AA4)](https://hub.docker.com/r/mildman1848/abs-tracked)
+[![Docker Image Size](https://img.shields.io/docker/image-size/mildman1848/abs-tracked/latest?style=for-the-badge&logo=docker&logoColor=fff&color=005AA4)](https://hub.docker.com/r/mildman1848/abs-tracked)
+[![License](https://img.shields.io/github/license/mildman1848/abs-tracked?style=for-the-badge&color=005AA4)](https://github.com/mildman1848/abs-tracked/blob/main/LICENSE)
 
-[![CI Status](https://img.shields.io/github/actions/workflow/status/mildman1848/ABShelfLife/ci.yml?branch=main&style=flat-square&logo=github&label=CI)](https://github.com/mildman1848/ABShelfLife/actions/workflows/ci.yml)
-[![Hadolint](https://img.shields.io/github/actions/workflow/status/mildman1848/ABShelfLife/hadolint.yml?branch=main&style=flat-square&logo=docker&label=Hadolint)](https://github.com/mildman1848/ABShelfLife/actions/workflows/hadolint.yml)
-[![Security Scan](https://img.shields.io/github/actions/workflow/status/mildman1848/ABShelfLife/security.yml?branch=main&style=flat-square&logo=github&label=Security)](https://github.com/mildman1848/ABShelfLife/actions/workflows/security.yml)
-[![Docker Release](https://img.shields.io/github/actions/workflow/status/mildman1848/ABShelfLife/docker-release.yml?branch=main&style=flat-square&logo=docker&label=Release)](https://github.com/mildman1848/ABShelfLife/actions/workflows/docker-release.yml)
+[![CI Status](https://img.shields.io/github/actions/workflow/status/mildman1848/abs-tracked/ci.yml?branch=main&style=flat-square&logo=github&label=CI)](https://github.com/mildman1848/abs-tracked/actions/workflows/ci.yml)
+[![Hadolint](https://img.shields.io/github/actions/workflow/status/mildman1848/abs-tracked/hadolint.yml?branch=main&style=flat-square&logo=docker&label=Hadolint)](https://github.com/mildman1848/abs-tracked/actions/workflows/hadolint.yml)
+[![Security Scan](https://img.shields.io/github/actions/workflow/status/mildman1848/abs-tracked/security.yml?branch=main&style=flat-square&logo=github&label=Security)](https://github.com/mildman1848/abs-tracked/actions/workflows/security.yml)
+[![Docker Release](https://img.shields.io/github/actions/workflow/status/mildman1848/abs-tracked/docker-release.yml?branch=main&style=flat-square&logo=docker&label=Release)](https://github.com/mildman1848/abs-tracked/actions/workflows/docker-release.yml)
 [![Version](https://img.shields.io/badge/version-v0.1.1-blue?style=flat-square&logo=github)](VERSION)
 
 ---
@@ -21,10 +21,10 @@
 
 ```bash
 # Docker Hub
-docker pull mildman1848/abshelflife:latest
+docker pull mildman1848/abs-tracked:latest
 
 # GHCR
-docker pull ghcr.io/mildman1848/abshelflife:latest
+docker pull ghcr.io/mildman1848/abs-tracked:latest
 ```
 
 ## Quick Start
@@ -38,17 +38,17 @@ printf '%s' 'your-ui-secret-key' > secrets/ui_secret_key.txt
 printf '%s' 'your-ui-token-encryption-key' > secrets/ui_token_encryption_key.txt
 
 # Run from Docker Hub image (DB + sync + UI)
-docker compose -f docker-compose.example.yml up -d abshelflife
+docker compose -f docker-compose.example.yml up -d abs-tracked
 
 # Local development build
-docker compose -f docker-compose.dev.yml up -d --build abshelflife
+docker compose -f docker-compose.dev.yml up -d --build abs-tracked
 ```
 
 UI: `http://<host>:8080`
 
 ## 🔐 Secret Management
 
-ABShelfLife follows LinuxServer-style `FILE__` secret handling.
+abs-tracked follows LinuxServer-style `FILE__` secret handling.
 
 Examples:
 - `FILE__ABS_DB_PASSWORD=/run/secrets/abs_db_password`
@@ -99,4 +99,4 @@ make shell
 
 ## Original Project Context
 
-ABShelfLife syncs against [Audiobookshelf](https://github.com/advplyr/audiobookshelf) instances via API and extends them with persistent, cross-server history tracking.
+abs-tracked syncs against [Audiobookshelf](https://github.com/advplyr/audiobookshelf) instances via API and extends them with persistent, cross-server history tracking.

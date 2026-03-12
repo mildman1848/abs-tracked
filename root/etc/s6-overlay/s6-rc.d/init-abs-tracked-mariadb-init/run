@@ -23,8 +23,8 @@ if [[ -f /config/env ]]; then
   source /config/env
 fi
 
-ABS_DB_NAME="${ABS_DB_NAME:-abshelflife}"
-ABS_DB_USER="${ABS_DB_USER:-abshelflife}"
+ABS_DB_NAME="${ABS_DB_NAME:-abs_tracked}"
+ABS_DB_USER="${ABS_DB_USER:-abs_tracked}"
 ABS_DB_PASSWORD="${ABS_DB_PASSWORD:-}"
 MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-}"
 

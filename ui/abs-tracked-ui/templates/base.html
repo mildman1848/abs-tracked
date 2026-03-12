@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ABShelfLife</title>
-  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='abshelflife-icon.svg') }}">
+  <title>abs-tracked</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='abs-tracked-icon.svg') }}">
   <style>
     :root { --bg:#f3f6fb; --ink:#0f1c33; --muted:#5c6880; --card:#ffffff; --line:#d5deef; --accent:#1d4ed8; --accent-2:#0f766e; --danger:#b91c1c; --ok:#166534; --panel:#f9fbff; --panel-soft:#eef4ff; }
     [data-theme="dark"] { --bg:#07101d; --ink:#f4f7ff; --muted:#b8c7e6; --card:#0f1a2d; --line:#344868; --accent:#7db7ff; --accent-2:#49d7bb; --danger:#ff8a8a; --ok:#67dd95; --panel:#182844; --panel-soft:#132039; }
@@ -75,8 +75,8 @@
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <img src="{{ url_for('static', filename='abshelflife-icon.svg') }}" alt="ABShelfLife">
-        <span>ABShelfLife</span>
+        <img src="{{ url_for('static', filename='abs-tracked-icon.svg') }}" alt="abs-tracked">
+        <span>abs-tracked</span>
       </div>
       <div class="top-controls">
         <form method="get" action="{{ url_for('set_language', lang_code='en') }}" id="lang-form" style="display:inline-flex;align-items:center;">
@@ -113,7 +113,7 @@
   <script>
     (function() {
       try {
-        const saved = localStorage.getItem('abshelflife-theme');
+        const saved = localStorage.getItem('abs-tracked-theme');
         if (saved === 'dark' || saved === 'light') {
           document.documentElement.setAttribute('data-theme', saved);
         }
@@ -123,7 +123,7 @@
       const current = document.documentElement.getAttribute('data-theme');
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
-      try { localStorage.setItem('abshelflife-theme', next); } catch (e) {}
+      try { localStorage.setItem('abs-tracked-theme', next); } catch (e) {}
     }
   </script>
 </body>

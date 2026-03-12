@@ -27,6 +27,18 @@
     {% else %}
     <a class="btn" href="{{ url_for('podcast_detail', target_id=podcast.target_id, library_item_id=podcast.library_item_id, filter='unheard') }}">{{ t('action.show_unheard') }}</a>
     {% endif %}
+    <form method="post" action="{{ url_for('mark_previous_podcast_episodes_heard', target_id=podcast.target_id, library_item_id=podcast.library_item_id) }}" style="display:inline-flex;align-items:center;gap:6px;">
+      <label for="until_episode_no"><strong>{{ t('field.until_episode_no') }}:</strong></label>
+      <input id="until_episode_no" name="until_episode_no" type="number" min="1" step="1" placeholder="112" style="width:96px;">
+      <button class="btn secondary" type="submit">{{ t('action.mark_prev_heard') }}</button>
+    </form>
+    <form method="post" action="{{ url_for('mark_podcast_episode_range_unheard', target_id=podcast.target_id, library_item_id=podcast.library_item_id) }}" style="display:inline-flex;align-items:center;gap:6px;">
+      <label for="from_episode_no"><strong>{{ t('field.from_episode_no') }}:</strong></label>
+      <input id="from_episode_no" name="from_episode_no" type="number" min="1" step="1" placeholder="81" style="width:80px;">
+      <label for="to_episode_no"><strong>{{ t('field.to_episode_no') }}:</strong></label>
+      <input id="to_episode_no" name="to_episode_no" type="number" min="1" step="1" placeholder="112" style="width:80px;">
+      <button class="btn secondary" type="submit">{{ t('action.mark_range_unheard') }}</button>
+    </form>
   </div>
   {% if episodes %}
   <table>
@@ -44,7 +56,7 @@
       {% for ep in episodes %}
       <tr>
         <td>{{ ep.episode_no if ep.episode_no else t('common.none') }}</td>
-        <td>{{ ep.episode_title }}</td>
+        <td>{{ ep.episode_display_title }}</td>
         <td>{{ ep.published_at if ep.published_at else t('common.none') }}</td>
         <td>{{ t('presence.' + (ep.abs_presence or 'missing')) }}</td>
         <td>{{ '%.1f'|format(ep.progress_pct) }}%</td>

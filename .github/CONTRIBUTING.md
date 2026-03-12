@@ -1,4 +1,4 @@
-# Contributing to ABShelfLife
+# Contributing to abs-tracked
 
 ## Before opening a PR
 
@@ -17,7 +17,7 @@
 | `docker-compose.example.yml` | Reference deployment |
 | `.env.example` | Environment template |
 | `root/` | s6 services, init scripts, runtime scripts |
-| `ui/abshelflife-ui/` | Integrated UI application |
+| `ui/abs-tracked-ui/` | Integrated UI application |
 | `README.md` / `README.DE.md` | Documentation |
 | `CHANGELOG.md` / `CHANGELOG.DE.md` | Change history |
 
