@@ -58,16 +58,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Set up Buildx
-        uses: docker/setup-buildx-action@v4
-
       - name: Build single image for scan
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: Dockerfile
-          load: true
-          tags: local/abs-tracked:scan
+        run: docker build -t local/abs-tracked:scan -f Dockerfile .
 
       - name: Trivy image SARIF
         uses: aquasecurity/trivy-action@0.35.0
@@ -80,7 +72,7 @@ jobs:
 
       - name: Upload Trivy image SARIF
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
+        if: ${{ always() && hashFiles('trivy-image.sarif') != '' }}
         with:
           sarif_file: trivy-image.sarif
           category: trivy-image
@@ -97,7 +89,7 @@ jobs:
 
       - name: Upload Trivy fs SARIF
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
+        if: ${{ always() && hashFiles('trivy-fs.sarif') != '' }}
         with:
           sarif_file: trivy-fs.sarif
           category: trivy-fs
