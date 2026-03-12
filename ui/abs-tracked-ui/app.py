@@ -3,6 +3,7 @@ import hashlib
 import json
 import os
 import re
+import secrets
 import time
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
@@ -18,7 +19,7 @@ from flask import Flask, Response, flash, g, redirect, render_template, request,
 from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
-app.secret_key = os.getenv("UI_SECRET_KEY", "change-me-in-production")
+app.secret_key = os.getenv("UI_SECRET_KEY") or secrets.token_urlsafe(32)
 
 SCHEMA_READY = False
 
@@ -1014,7 +1015,7 @@ def build_canonical_key(asin: str, isbn: str, title: str, author: str, duration:
     if isbn_norm:
         return f"isbn:{isbn_norm}"
     base = f"{(title or '').strip().lower()}|{(author or '').strip().lower()}|{int(duration or 0)}"
-    return f"tad:{hashlib.sha1(base.encode('utf-8')).hexdigest()}"
+    return f"tad:{hashlib.sha256(base.encode('utf-8')).hexdigest()}"
 
 
 def itunes_lookup_podcast(title: str, author: str) -> dict[str, str]:
@@ -1107,7 +1108,7 @@ def parse_feed_podcast_episodes(feed_url: str, fallback_title: str, fallback_aut
             if enc is not None:
                 image_url = (enc.attrib.get("url") or "").strip()
 
-        external_id = guid or f"itunes:{hashlib.sha1((title + '|' + pub).encode('utf-8')).hexdigest()}"
+        external_id = guid or f"itunes:{hashlib.sha256((title + '|' + pub).encode('utf-8')).hexdigest()}"
         episodes.append(
             {
                 "external_id": external_id[:64],

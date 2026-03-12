@@ -72,12 +72,12 @@ principal_match_required() {
     [[ "$ABS_CROSS_TARGET_REQUIRE_PRINCIPAL_MATCH" == "1" ]]
 }
 
-sha1_text() {
+sha256_text() {
     local text="$1"
-    if command -v sha1sum >/dev/null 2>&1; then
-        printf '%s' "$text" | sha1sum | awk '{print $1}'
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s' "$text" | sha256sum | awk '{print $1}'
     else
-        printf '%s' "$text" | shasum -a 1 | awk '{print $1}'
+        printf '%s' "$text" | shasum -a 256 | awk '{print $1}'
     fi
 }
 
@@ -426,7 +426,7 @@ canonical_key_from_fields() {
             if [[ -n "$normalized_title" ]]; then
                 local base
                 base="${normalized_title}|${normalized_author}|${rounded_duration}"
-                echo "tad:$(sha1_text "$base")"
+                echo "tad:$(sha256_text "$base")"
                 return 0
             fi
             ;;
