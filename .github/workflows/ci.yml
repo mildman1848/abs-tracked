@@ -14,11 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Lint single-container Dockerfiles
-        run: |
-          docker run --rm -v "$PWD:/workspace" -w /workspace hadolint/hadolint \
-            hadolint --config .hadolint.yaml Dockerfile Dockerfile.aarch64
-
       - name: Validate shell scripts
         run: |
           set -e

@@ -1,5 +1,7 @@
 # Changelog
 
+Deutsch: [CHANGELOG.DE.md](CHANGELOG.DE.md)
+
 > 🇩🇪 **[German Version](CHANGELOG.DE.md)** | 📖 **English Version**
 
 All notable changes to this project are documented in this file.

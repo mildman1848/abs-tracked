@@ -1,0 +1,7 @@
+.git/
+.venv-audit/
+dist/
+node_modules/
+runtime/
+secrets/
+*.zip

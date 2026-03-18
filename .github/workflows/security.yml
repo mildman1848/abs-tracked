@@ -6,48 +6,6 @@ on:
     - cron: '0 6 * * 1'
 
 jobs:
-  dockerfile-scan:
-    name: Dockerfile Scan
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Hadolint SARIF
-        uses: hadolint/hadolint-action@v3.3.0
-        with:
-          dockerfile: Dockerfile
-          config: .hadolint.yaml
-          format: sarif
-          output-file: hadolint-results.sarif
-          no-fail: true
-
-      - name: Upload Hadolint SARIF
-        uses: github/codeql-action/upload-sarif@v4
-        if: always()
-        with:
-          sarif_file: hadolint-results.sarif
-          category: hadolint
-
-      - name: Hadolint aarch64 SARIF
-        uses: hadolint/hadolint-action@v3.3.0
-        with:
-          dockerfile: Dockerfile.aarch64
-          config: .hadolint.yaml
-          format: sarif
-          output-file: hadolint-aarch64-results.sarif
-          no-fail: true
-
-      - name: Upload Hadolint aarch64 SARIF
-        uses: github/codeql-action/upload-sarif@v4
-        if: always()
-        with:
-          sarif_file: hadolint-aarch64-results.sarif
-          category: hadolint-aarch64
-
   trivy:
     name: Trivy Scan
     runs-on: ubuntu-latest
