@@ -898,6 +898,28 @@ def append_query_param(url: str, key: str, value: str) -> str:
     return f"{url}{sep}{key}={quote(str(value), safe='')}"
 
 
+def is_safe_abs_redirect(base_url: str, target_url: str) -> bool:
+    root = normalize_url(base_url)
+    target = (target_url or "").strip()
+    if not root or not target:
+        return False
+
+    try:
+        parsed_root = urlparse(root)
+        parsed_target = urlparse(target)
+    except Exception:
+        return False
+
+    if parsed_root.scheme not in ("http", "https") or parsed_target.scheme not in ("http", "https"):
+        return False
+
+    if parsed_root.netloc != parsed_target.netloc:
+        return False
+
+    allowed_prefix = root if root.endswith("/audiobookshelf") else f"{root}/audiobookshelf"
+    return target.rstrip("/").startswith(allowed_prefix.rstrip("/"))
+
+
 def parse_int(value: Any, default: int = 0) -> int:
     try:
         return int(str(value))
@@ -4080,7 +4102,7 @@ def open_abs_item(target_id: str, library_item_id: str):
         abs_post_optional_json(base_url, str(target.get("token") or ""), f"/api/items/{library_item_id}/play", {})
 
     abs_url = build_abs_web_item_url(base_url, library_item_id)
-    if not abs_url:
+    if not abs_url or not is_safe_abs_redirect(base_url, abs_url):
         flash("Unable to build ABS playback URL.", "error")
         return redirect(url_for("dashboard"))
     return redirect(abs_url, code=302)
@@ -4149,7 +4171,7 @@ def open_next_podcast_episode(target_id: str, library_item_id: str):
         return redirect(url_for("podcast_detail", target_id=target_id, library_item_id=library_item_id))
 
     abs_url = build_abs_web_item_url(base_url, library_item_id)
-    if not abs_url:
+    if not abs_url or not is_safe_abs_redirect(base_url, abs_url):
         flash("Unable to build ABS playback URL.", "error")
         return redirect(url_for("podcast_detail", target_id=target_id, library_item_id=library_item_id))
 
