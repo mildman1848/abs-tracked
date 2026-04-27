@@ -20,7 +20,7 @@ jobs:
         run: docker build -t local/abs-tracked:scan -f Dockerfile .
 
       - name: Trivy image SARIF
-        uses: aquasecurity/trivy-action@0.35.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: local/abs-tracked:scan
           format: sarif
@@ -36,7 +36,7 @@ jobs:
           category: trivy-image
 
       - name: Trivy fs SARIF
-        uses: aquasecurity/trivy-action@0.35.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: .
