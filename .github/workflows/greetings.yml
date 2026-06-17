@@ -7,7 +7,9 @@ permissions:
 
 jobs:
   greeting:
+    if: github.actor != 'dependabot[bot]'
     permissions:
+      contents: read
       issues: write
       pull-requests: write
     runs-on: ubuntu-latest
