@@ -7,7 +7,7 @@ permissions:
 
 jobs:
   greeting:
-    if: github.actor != 'dependabot[bot]'
+    if: ${{ !contains(github.actor, 'dependabot') }}
     permissions:
       contents: read
       issues: write
