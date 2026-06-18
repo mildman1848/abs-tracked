@@ -1,7 +1,5 @@
 # Security Policy
 
-Deutsch: [SECURITY.DE.md](SECURITY.DE.md)
-
 ## Supported Versions
 
 Only the current release line receives security updates.
