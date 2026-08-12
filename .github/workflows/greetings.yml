@@ -16,6 +16,5 @@ jobs:
     steps:
       - uses: actions/first-interaction@v3
         with:
-          issue-message: "Thanks for opening your first issue in abs-tracked. Please make sure you used the correct issue template."
-          pr-message: "Thanks for your first pull request. Please ensure the PR template is fully filled."
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue_message: "Thanks for opening your first issue in abs-tracked. Please make sure you used the correct issue template."
+          pr_message: "Thanks for your first pull request. Please ensure the PR template is fully filled."
